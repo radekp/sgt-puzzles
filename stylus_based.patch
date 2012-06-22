@@ -1,0 +1,899 @@
+Index: windows.c
+===================================================================
+--- windows.c	(revision 9404)
++++ windows.c	(working copy)
+@@ -1010,7 +1010,7 @@
+ 	    if (!nme) {
+ 		game_params *params;
+ 
+-		nme = midend_new(NULL, fe->game, NULL, NULL);
++		nme = midend_new(NULL, fe->game, NULL, NULL, 0);
+ 
+ 		/*
+ 		 * Set the non-interactive mid-end to have the same
+@@ -1073,7 +1073,7 @@
+     fe->drawstatus = PRINTING;
+     fe->hdc = pd.hDC;
+ 
+-    fe->dr = drawing_new(&win_drawing, NULL, fe);
++    fe->dr = drawing_new(&win_drawing, NULL, fe, 0);
+     document_print(doc, fe->dr);
+     drawing_free(fe->dr);
+     fe->dr = NULL;
+@@ -1559,7 +1559,14 @@
+     fe->game = game;
+ 
+     if (fe->me) midend_free(fe->me);
+-    fe->me = midend_new(fe, fe->game, &win_drawing, fe);
++    fe->me = midend_new(fe, fe->game, &win_drawing, fe,
++#ifdef _WIN32_WCE
++  /* For Pocket PC devices we assume 'stylus based' behaviour. */
++			1
++#else
++			0
++#endif
++			);
+ 
+     if (game_id) {
+         *error = midend_game_id(fe->me, game_id);
+Index: midend.c
+===================================================================
+--- midend.c	(revision 9404)
++++ midend.c	(working copy)
+@@ -92,7 +92,8 @@
+ } while (0)
+ 
+ midend *midend_new(frontend *fe, const game *ourgame,
+-		   const drawing_api *drapi, void *drhandle)
++		   const drawing_api *drapi, void *drhandle,
++		   int stylus_based)
+ {
+     midend *me = snew(midend);
+     void *randseed;
+@@ -127,7 +128,7 @@
+     me->elapsed = 0.0F;
+     me->tilesize = me->winwidth = me->winheight = 0;
+     if (drapi)
+-	me->drawing = drawing_new(drapi, me, drhandle);
++	me->drawing = drawing_new(drapi, me, drhandle, stylus_based);
+     else
+ 	me->drawing = NULL;
+ 
+Index: puzzles.h
+===================================================================
+--- puzzles.h	(revision 9404)
++++ puzzles.h	(working copy)
+@@ -83,7 +83,6 @@
+   #define SMALL_SCREEN
+   #define PORTRAIT_SCREEN
+   #define VIVID_COLOURS
+-  #define STYLUS_BASED
+ #endif
+ 
+ #define IGNOREARG(x) ( (x) = (x) )
+@@ -174,7 +173,8 @@
+ /*
+  * drawing.c
+  */
+-drawing *drawing_new(const drawing_api *api, midend *me, void *handle);
++drawing *drawing_new(const drawing_api *api, midend *me, void *handle,
++		     int stylus_based);
+ void drawing_free(drawing *dr);
+ void draw_text(drawing *dr, int x, int y, int fonttype, int fontsize,
+                int align, int colour, char *text);
+@@ -222,11 +222,18 @@
+ void print_line_width(drawing *dr, int width);
+ void print_line_dotted(drawing *dr, int dotted);
+ 
++#ifdef STANDALONE_SOLVER
++#define drawing_stylus_based(dr) 0
++#else
++int drawing_stylus_based(drawing *dr);
++#endif
++
+ /*
+  * midend.c
+  */
+ midend *midend_new(frontend *fe, const game *ourgame,
+-		   const drawing_api *drapi, void *drhandle);
++		   const drawing_api *drapi, void *drhandle,
++		   int stylus_based);
+ void midend_free(midend *me);
+ void midend_set_params(midend *me, game_params *params);
+ game_params *midend_get_params(midend *me);
+Index: lightup.c
+===================================================================
+--- lightup.c	(revision 9404)
++++ lightup.c	(working copy)
+@@ -1860,6 +1860,7 @@
+     int w, h;
+     unsigned int *flags;         /* width * height */
+     int started;
++    int stylus_based;
+ };
+ 
+ 
+@@ -1914,19 +1915,25 @@
+         if (flags & F_BLACK)
+             return nullret;
+         if (action == FLIP_LIGHT) {
+-#ifdef STYLUS_BASED
+-            if (flags & F_IMPOSSIBLE || flags & F_LIGHT) c = 'I'; else c = 'L';
+-#else
+-            if (flags & F_IMPOSSIBLE) return nullret;
+-            c = 'L';
+-#endif
++	    if (ds->stylus_based) {
++		if (flags & F_IMPOSSIBLE || flags & F_LIGHT)
++		    c = 'I';
++		else
++		    c = 'L';
++	    } else {
++		if (flags & F_IMPOSSIBLE) return nullret;
++		c = 'L';
++	    }
+         } else {
+-#ifdef STYLUS_BASED
+-            if (flags & F_IMPOSSIBLE || flags & F_LIGHT) c = 'L'; else c = 'I';
+-#else
+-            if (flags & F_LIGHT) return nullret;
+-            c = 'I';
+-#endif
++	    if (ds->stylus_based) {
++		if (flags & F_IMPOSSIBLE || flags & F_LIGHT)
++		    c = 'L';
++		else
++		    c = 'I';
++	    } else {
++		if (flags & F_LIGHT) return nullret;
++		c = 'I';
++	    }
+         }
+         sprintf(buf, "%c%d,%d", (int)c, cx, cy);
+         break;
+@@ -2049,6 +2056,8 @@
+ 
+     ds->started = 0;
+ 
++    ds->stylus_based = drawing_stylus_based(dr);
++
+     return ds;
+ }
+ 
+Index: osx.m
+===================================================================
+--- osx.m	(revision 9404)
++++ osx.m	(working copy)
+@@ -539,7 +539,7 @@
+ 
+     fe.window = self;
+ 
+-    me = midend_new(&fe, ourgame, &osx_drawing, &fe);
++    me = midend_new(&fe, ourgame, &osx_drawing, &fe, 0);
+     /*
+      * If we ever need to open a fresh window using a provided game
+      * ID, I think the right thing is to move most of this method
+Index: gtk.c
+===================================================================
+--- gtk.c	(revision 9404)
++++ gtk.c	(working copy)
+@@ -2043,14 +2043,26 @@
+     char errbuf[1024];
+     extern char *const *const xpm_icons[];
+     extern const int n_xpm_icons;
++    const char *dev_flags;
++    int stylus_based;
+ 
+     fe = snew(frontend);
+ 
+     fe->timer_active = FALSE;
+     fe->timer_id = -1;
+ 
+-    fe->me = midend_new(fe, &thegame, &gtk_drawing, fe);
++    /*
++     * For the Gtk frontend, allow an environment variable to tell us
++     * if we're running on a 'stylus based' device.
++     */
++    stylus_based = 0;
++    dev_flags = getenv("SGT_PUZZLES_DEVICE_FLAGS");
++    if (dev_flags && strstr(dev_flags, "STYLUS_BASED")) {
++	stylus_based = 1;
++    }
+ 
++    fe->me = midend_new(fe, &thegame, &gtk_drawing, fe, stylus_based);
++
+     if (arg) {
+ 	char *err;
+ 	FILE *fp;
+@@ -2220,11 +2232,11 @@
+     gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
+ 		       GTK_SIGNAL_FUNC(menu_save_event), fe);
+     gtk_widget_show(menuitem);
+-#ifndef STYLUS_BASED
+-    add_menu_separator(GTK_CONTAINER(menu));
+-    add_menu_item_with_key(fe, GTK_CONTAINER(menu), "Undo", 'u');
+-    add_menu_item_with_key(fe, GTK_CONTAINER(menu), "Redo", 'r');
+-#endif
++    if (!stylus_based) {
++	add_menu_separator(GTK_CONTAINER(menu));
++	add_menu_item_with_key(fe, GTK_CONTAINER(menu), "Undo", 'u');
++	add_menu_item_with_key(fe, GTK_CONTAINER(menu), "Redo", 'r');
++    }
+     if (thegame.can_format_as_text_ever) {
+ 	add_menu_separator(GTK_CONTAINER(menu));
+ 	menuitem = gtk_menu_item_new_with_label("Copy");
+@@ -2260,41 +2272,40 @@
+ 		       GTK_SIGNAL_FUNC(menu_about_event), fe);
+     gtk_widget_show(menuitem);
+ 
+-#ifdef STYLUS_BASED
+-    menuitem=gtk_button_new_with_mnemonic("_Redo");
+-    gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
+-			GINT_TO_POINTER((int)('r')));
+-    gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
+-		       GTK_SIGNAL_FUNC(menu_key_event), fe);
+-    gtk_box_pack_end(hbox, menuitem, FALSE, FALSE, 0);
+-    gtk_widget_show(menuitem);
++    if (stylus_based) {
++	menuitem=gtk_button_new_with_mnemonic("_Redo");
++	gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
++			    GINT_TO_POINTER((int)('r')));
++	gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
++			   GTK_SIGNAL_FUNC(menu_key_event), fe);
++	gtk_box_pack_end(hbox, menuitem, FALSE, FALSE, 0);
++	gtk_widget_show(menuitem);
+ 
+-    menuitem=gtk_button_new_with_mnemonic("_Undo");
+-    gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
+-			GINT_TO_POINTER((int)('u')));
+-    gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
+-		       GTK_SIGNAL_FUNC(menu_key_event), fe);
+-    gtk_box_pack_end(hbox, menuitem, FALSE, FALSE, 0);
+-    gtk_widget_show(menuitem);
++	menuitem=gtk_button_new_with_mnemonic("_Undo");
++	gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
++			    GINT_TO_POINTER((int)('u')));
++	gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
++			   GTK_SIGNAL_FUNC(menu_key_event), fe);
++	gtk_box_pack_end(hbox, menuitem, FALSE, FALSE, 0);
++	gtk_widget_show(menuitem);
+ 
+-    if (thegame.flags & REQUIRE_NUMPAD) {
+-	hbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
+-	gtk_box_pack_start(vbox, GTK_WIDGET(hbox), FALSE, FALSE, 0);
+-	gtk_widget_show(GTK_WIDGET(hbox));
++	if (thegame.flags & REQUIRE_NUMPAD) {
++	    hbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
++	    gtk_box_pack_start(vbox, GTK_WIDGET(hbox), FALSE, FALSE, 0);
++	    gtk_widget_show(GTK_WIDGET(hbox));
+ 
+-	*((int*)errbuf)=0;
+-	errbuf[1]='\0';
+-	for(errbuf[0]='0';errbuf[0]<='9';errbuf[0]++) {
+-	    menuitem=gtk_button_new_with_label(errbuf);
+-	    gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
+-				GINT_TO_POINTER((int)(errbuf[0])));
+-	    gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
+-			       GTK_SIGNAL_FUNC(menu_key_event), fe);
+-	    gtk_box_pack_start(hbox, menuitem, TRUE, TRUE, 0);
+-	    gtk_widget_show(menuitem);
++	    errbuf[1]='\0';
++	    for(errbuf[0]='0';errbuf[0]<='9';errbuf[0]++) {
++		menuitem=gtk_button_new_with_label(errbuf);
++		gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
++				    GINT_TO_POINTER((int)(errbuf[0])));
++		gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
++				   GTK_SIGNAL_FUNC(menu_key_event), fe);
++		gtk_box_pack_start(hbox, menuitem, TRUE, TRUE, 0);
++		gtk_widget_show(menuitem);
++	    }
+ 	}
+     }
+-#endif /* STYLUS_BASED */
+ 
+     changed_preset(fe);
+ 
+@@ -2628,7 +2639,7 @@
+ 
+ 	n = ngenerate;
+ 
+-	me = midend_new(NULL, &thegame, NULL, NULL);
++	me = midend_new(NULL, &thegame, NULL, NULL, 0);
+ 	i = 0;
+ 
+ 	if (savefile && !savesuffix)
+Index: pattern.c
+===================================================================
+--- pattern.c	(revision 9404)
++++ pattern.c	(working copy)
+@@ -830,6 +830,7 @@
+     int tilesize;
+     unsigned char *visible;
+     int cur_x, cur_y;
++    int stylus_based;
+ };
+ 
+ static char *interpret_move(game_state *state, game_ui *ui, game_drawstate *ds,
+@@ -843,28 +844,26 @@
+     if (x >= 0 && x < state->w && y >= 0 && y < state->h &&
+         (button == LEFT_BUTTON || button == RIGHT_BUTTON ||
+          button == MIDDLE_BUTTON)) {
+-#ifdef STYLUS_BASED
+         int currstate = state->grid[y * state->w + x];
+-#endif
+ 
+         ui->dragging = TRUE;
+ 
+         if (button == LEFT_BUTTON) {
+             ui->drag = LEFT_DRAG;
+             ui->release = LEFT_RELEASE;
+-#ifdef STYLUS_BASED
+-            ui->state = (currstate + 2) % 3; /* FULL -> EMPTY -> UNKNOWN */
+-#else
+-            ui->state = GRID_FULL;
+-#endif
++	    if (ds->stylus_based) {
++		ui->state = (currstate + 2) % 3; /* FULL -> EMPTY -> UNKNOWN */
++	    } else {
++		ui->state = GRID_FULL;
++	    }
+         } else if (button == RIGHT_BUTTON) {
+             ui->drag = RIGHT_DRAG;
+             ui->release = RIGHT_RELEASE;
+-#ifdef STYLUS_BASED
+-            ui->state = (currstate + 1) % 3; /* EMPTY -> FULL -> UNKNOWN */
+-#else
+-            ui->state = GRID_EMPTY;
+-#endif
++	    if (ds->stylus_based) {
++		ui->state = (currstate + 1) % 3; /* EMPTY -> FULL -> UNKNOWN */
++	    } else {
++		ui->state = GRID_EMPTY;
++	    }
+         } else /* if (button == MIDDLE_BUTTON) */ {
+             ui->drag = MIDDLE_DRAG;
+             ui->release = MIDDLE_RELEASE;
+@@ -1092,6 +1091,8 @@
+     memset(ds->visible, 255, ds->w * ds->h);
+     ds->cur_x = ds->cur_y = 0;
+ 
++    ds->stylus_based = drawing_stylus_based(dr);
++
+     return ds;
+ }
+ 
+Index: net.c
+===================================================================
+--- net.c	(revision 9404)
++++ net.c	(working copy)
+@@ -12,21 +12,6 @@
+ #include "puzzles.h"
+ #include "tree234.h"
+ 
+-/*
+- * The standard user interface for Net simply has left- and
+- * right-button mouse clicks in a square rotate it one way or the
+- * other. We also provide, by #ifdef, a separate interface based on
+- * rotational dragging motions. I initially developed this for the
+- * Mac on the basis that it might work better than the click
+- * interface with only one mouse button available, but in fact
+- * found it to be quite strange and unintuitive. Apparently it
+- * works better on stylus-driven platforms such as Palm and
+- * PocketPC, though, so we enable it by default there.
+- */
+-#ifdef STYLUS_BASED
+-#define USE_DRAGGING
+-#endif
+-
+ #define MATMUL(xr,yr,m,x,y) do { \
+     float rx, ry, xx = (x), yy = (y), *mat = (m); \
+     rx = mat[0] * xx + mat[2] * yy; \
+@@ -1861,9 +1846,7 @@
+     int cur_x, cur_y;
+     int cur_visible;
+     random_state *rs; /* used for jumbling */
+-#ifdef USE_DRAGGING
+     int dragtilex, dragtiley, dragstartx, dragstarty, dragged;
+-#endif
+ };
+ 
+ static game_ui *new_ui(game_state *state)
+@@ -1916,6 +1899,8 @@
+     int org_x, org_y;
+     int tilesize;
+     unsigned char *visible;
++    int stylus_based;
++    int use_dragging;
+ };
+ 
+ /* ----------------------------------------------------------------------
+@@ -1938,12 +1923,10 @@
+ 
+     if (button == LEFT_BUTTON ||
+ 	button == MIDDLE_BUTTON ||
+-#ifdef USE_DRAGGING
+-	button == LEFT_DRAG ||
+-	button == LEFT_RELEASE ||
+-	button == RIGHT_DRAG ||
+-	button == RIGHT_RELEASE ||
+-#endif
++	(ds->use_dragging && (button == LEFT_DRAG ||
++			      button == LEFT_RELEASE ||
++			      button == RIGHT_DRAG ||
++			      button == RIGHT_RELEASE)) ||
+ 	button == RIGHT_BUTTON) {
+ 
+ 	if (ui->cur_visible) {
+@@ -1969,111 +1952,101 @@
+ 	    y % TILE_SIZE >= TILE_SIZE - TILE_BORDER)
+ 	    return nullret;
+ 
+-#ifdef USE_DRAGGING
++	if (ds->use_dragging) {
+ 
+-        if (button == MIDDLE_BUTTON
+-#ifdef STYLUS_BASED
+-	    || button == RIGHT_BUTTON  /* with a stylus, `right-click' locks */
+-#endif
+-	    ) {
+-            /*
+-             * Middle button never drags: it only toggles the lock.
+-             */
+-            action = TOGGLE_LOCK;
+-        } else if (button == LEFT_BUTTON
+-#ifndef STYLUS_BASED
+-                   || button == RIGHT_BUTTON /* (see above) */
+-#endif
+-                  ) {
+-            /*
+-             * Otherwise, we note down the start point for a drag.
+-             */
+-            ui->dragtilex = tx;
+-            ui->dragtiley = ty;
+-            ui->dragstartx = x % TILE_SIZE;
+-            ui->dragstarty = y % TILE_SIZE;
+-            ui->dragged = FALSE;
+-            return nullret;            /* no actual action */
+-        } else if (button == LEFT_DRAG
+-#ifndef STYLUS_BASED
+-                   || button == RIGHT_DRAG
+-#endif
+-                  ) {
+-            /*
+-             * Find the new drag point and see if it necessitates a
+-             * rotation.
+-             */
+-            int x0,y0, xA,yA, xC,yC, xF,yF;
+-            int mx, my;
+-            int d0, dA, dC, dF, dmin;
++	    if (button == MIDDLE_BUTTON
++		|| (ds->stylus_based && (button == RIGHT_BUTTON))) {
++				/* with a stylus, `right-click' locks */
++		/*
++		 * Middle button never drags: it only toggles the lock.
++		 */
++		action = TOGGLE_LOCK;
++	    } else if (button == LEFT_BUTTON
++		       || ((button == RIGHT_BUTTON) && !ds->stylus_based)) {
++				/* (see above) */
++		/*
++		 * Otherwise, we note down the start point for a drag.
++		 */
++		ui->dragtilex = tx;
++		ui->dragtiley = ty;
++		ui->dragstartx = x % TILE_SIZE;
++		ui->dragstarty = y % TILE_SIZE;
++		ui->dragged = FALSE;
++		return nullret;            /* no actual action */
++	    } else if (button == LEFT_DRAG
++		       || ((button == RIGHT_DRAG) && !ds->stylus_based)) {
++		/*
++		 * Find the new drag point and see if it necessitates a
++		 * rotation.
++		 */
++		int x0,y0, xA,yA, xC,yC, xF,yF;
++		int mx, my;
++		int d0, dA, dC, dF, dmin;
+ 
+-            tx = ui->dragtilex;
+-            ty = ui->dragtiley;
++		tx = ui->dragtilex;
++		ty = ui->dragtiley;
+ 
+-            mx = x - (ui->dragtilex * TILE_SIZE);
+-            my = y - (ui->dragtiley * TILE_SIZE);
++		mx = x - (ui->dragtilex * TILE_SIZE);
++		my = y - (ui->dragtiley * TILE_SIZE);
+ 
+-            x0 = ui->dragstartx;
+-            y0 = ui->dragstarty;
+-            xA = ui->dragstarty;
+-            yA = TILE_SIZE-1 - ui->dragstartx;
+-            xF = TILE_SIZE-1 - ui->dragstartx;
+-            yF = TILE_SIZE-1 - ui->dragstarty;
+-            xC = TILE_SIZE-1 - ui->dragstarty;
+-            yC = ui->dragstartx;
++		x0 = ui->dragstartx;
++		y0 = ui->dragstarty;
++		xA = ui->dragstarty;
++		yA = TILE_SIZE-1 - ui->dragstartx;
++		xF = TILE_SIZE-1 - ui->dragstartx;
++		yF = TILE_SIZE-1 - ui->dragstarty;
++		xC = TILE_SIZE-1 - ui->dragstarty;
++		yC = ui->dragstartx;
+ 
+-            d0 = (mx-x0)*(mx-x0) + (my-y0)*(my-y0);
+-            dA = (mx-xA)*(mx-xA) + (my-yA)*(my-yA);
+-            dF = (mx-xF)*(mx-xF) + (my-yF)*(my-yF);
+-            dC = (mx-xC)*(mx-xC) + (my-yC)*(my-yC);
++		d0 = (mx-x0)*(mx-x0) + (my-y0)*(my-y0);
++		dA = (mx-xA)*(mx-xA) + (my-yA)*(my-yA);
++		dF = (mx-xF)*(mx-xF) + (my-yF)*(my-yF);
++		dC = (mx-xC)*(mx-xC) + (my-yC)*(my-yC);
+ 
+-            dmin = min(min(d0,dA),min(dF,dC));
++		dmin = min(min(d0,dA),min(dF,dC));
+ 
+-            if (d0 == dmin) {
+-                return nullret;
+-            } else if (dF == dmin) {
+-                action = ROTATE_180;
+-                ui->dragstartx = xF;
+-                ui->dragstarty = yF;
+-                ui->dragged = TRUE;
+-            } else if (dA == dmin) {
+-                action = ROTATE_LEFT;
+-                ui->dragstartx = xA;
+-                ui->dragstarty = yA;
+-                ui->dragged = TRUE;
+-            } else /* dC == dmin */ {
+-                action = ROTATE_RIGHT;
+-                ui->dragstartx = xC;
+-                ui->dragstarty = yC;
+-                ui->dragged = TRUE;
+-            }
+-        } else if (button == LEFT_RELEASE
+-#ifndef STYLUS_BASED
+-                   || button == RIGHT_RELEASE
+-#endif
+-                  ) {
+-            if (!ui->dragged) {
+-                /*
+-                 * There was a click but no perceptible drag:
+-                 * revert to single-click behaviour.
+-                 */
+-                tx = ui->dragtilex;
+-                ty = ui->dragtiley;
++		if (d0 == dmin) {
++		    return nullret;
++		} else if (dF == dmin) {
++		    action = ROTATE_180;
++		    ui->dragstartx = xF;
++		    ui->dragstarty = yF;
++		    ui->dragged = TRUE;
++		} else if (dA == dmin) {
++		    action = ROTATE_LEFT;
++		    ui->dragstartx = xA;
++		    ui->dragstarty = yA;
++		    ui->dragged = TRUE;
++		} else /* dC == dmin */ {
++		    action = ROTATE_RIGHT;
++		    ui->dragstartx = xC;
++		    ui->dragstarty = yC;
++		    ui->dragged = TRUE;
++		}
++	    } else if (button == LEFT_RELEASE
++		       || ((button == RIGHT_RELEASE) && !ds->stylus_based)) {
++		if (!ui->dragged) {
++		    /*
++		     * There was a click but no perceptible drag:
++		     * revert to single-click behaviour.
++		     */
++		    tx = ui->dragtilex;
++		    ty = ui->dragtiley;
+ 
+-                if (button == LEFT_RELEASE)
+-                    action = ROTATE_LEFT;
+-                else
+-                    action = ROTATE_RIGHT;
+-            } else
+-                return nullret;        /* no action */
+-        }
++		    if (button == LEFT_RELEASE)
++			action = ROTATE_LEFT;
++		    else
++			action = ROTATE_RIGHT;
++		} else
++		    return nullret;        /* no action */
++	    }
+ 
+-#else /* USE_DRAGGING */
++	} else {
+ 
+-	action = (button == LEFT_BUTTON ? ROTATE_LEFT :
+-		  button == RIGHT_BUTTON ? ROTATE_RIGHT : TOGGLE_LOCK);
++	    action = (button == LEFT_BUTTON ? ROTATE_LEFT :
++		      button == RIGHT_BUTTON ? ROTATE_RIGHT : TOGGLE_LOCK);
+ 
+-#endif /* USE_DRAGGING */
++	}
+ 
+     } else if (IS_CURSOR_MOVE(button)) {
+         switch (button) {
+@@ -2297,6 +2270,25 @@
+     ds->tilesize = 0;                  /* undecided yet */
+     memset(ds->visible, 0xFF, state->width * state->height);
+ 
++    ds->stylus_based = drawing_stylus_based(dr);
++
++    /*
++     * The standard user interface for Net simply has left- and
++     * right-button mouse clicks in a square rotate it one way or the
++     * other. We also provide, by #ifdef, a separate interface based on
++     * rotational dragging motions. I initially developed this for the
++     * Mac on the basis that it might work better than the click
++     * interface with only one mouse button available, but in fact
++     * found it to be quite strange and unintuitive. Apparently it
++     * works better on stylus-driven platforms such as Palm and
++     * PocketPC, though, so we enable it by default there.
++     */
++#ifdef USE_DRAGGING
++    ds->use_dragging = 1;
++#else
++    ds->use_dragging = ds->stylus_based;
++#endif
++    
+     return ds;
+ }
+ 
+Index: drawing.c
+===================================================================
+--- drawing.c	(revision 9404)
++++ drawing.c	(working copy)
+@@ -48,9 +48,34 @@
+      * this may set it to NULL. */
+     midend *me;
+     char *laststatus;
++
++    /*
++     * Whether to make UI and game play modifications suitable for
++     * "stylus based" systems.  These include the following.
++     *
++     * 1. Providing "Undo" and "Redo" as small buttons, instead of in
++     * the menu (and as well as via keyboard shortcuts).
++     *
++     * 2. Providing a row of number buttons, in games like Solo that
++     * expect number keys ("1".."9").
++     * 
++     * 3. In games like Loopy, where a right click is used to mark
++     * some possibility as eliminated, the logic of a left click
++     * (i.e. stylus touch) is changed so as to cycle between
++     * "indeterminate", "positively chosen" and "eliminated" states;
++     * instead of just between "indeterminate" and "positively
++     * chosen".
++     * 
++     * 4. In Net, where left and right clicks indicate rotation in
++     * opposing directions, stylus_based modifies the code to allow
++     * mouse dragging to indicate the direction instead.
++     * 
++     */
++    int stylus_based;
+ };
+ 
+-drawing *drawing_new(const drawing_api *api, midend *me, void *handle)
++drawing *drawing_new(const drawing_api *api, midend *me, void *handle,
++		     int stylus_based)
+ {
+     drawing *dr = snew(drawing);
+     dr->api = api;
+@@ -60,6 +85,7 @@
+     dr->scale = 1.0F;
+     dr->me = me;
+     dr->laststatus = NULL;
++    dr->stylus_based = stylus_based;
+     return dr;
+ }
+ 
+@@ -349,3 +375,8 @@
+ {
+     dr->api->line_dotted(dr->handle, dotted);
+ }
++
++int drawing_stylus_based(drawing *dr)
++{
++    return dr ? dr->stylus_based : 0;
++}
+Index: loopy.c
+===================================================================
+--- loopy.c	(revision 9404)
++++ loopy.c	(working copy)
+@@ -229,6 +229,7 @@
+     char *lines;
+     char *clue_error;
+     char *clue_satisfied;
++    int stylus_based;
+ };
+ 
+ static char *validate_desc(game_params *params, char *desc);
+@@ -913,6 +914,8 @@
+     for (i = 0; i < num_faces; i++)
+         ds->textx[i] = ds->texty[i] = -1;
+ 
++    ds->stylus_based = drawing_stylus_based(dr);
++
+     return ds;
+ }
+ 
+@@ -2850,10 +2853,10 @@
+ 	    button_char = 'y';
+ 	    break;
+ 	  case LINE_YES:
+-#ifdef STYLUS_BASED
+-	    button_char = 'n';
+-	    break;
+-#endif
++            if (ds->stylus_based) {
++		button_char = 'n';
++		break;
++	    }
+ 	  case LINE_NO:
+ 	    button_char = 'u';
+ 	    break;
+@@ -2868,10 +2871,10 @@
+ 	    button_char = 'n';
+ 	    break;
+ 	  case LINE_NO:
+-#ifdef STYLUS_BASED
+-	    button_char = 'y';
+-	    break;
+-#endif
++            if (ds->stylus_based) {
++		button_char = 'y';
++		break;
++	    }
+ 	  case LINE_YES:
+ 	    button_char = 'u';
+ 	    break;
+Index: nestedvm.c
+===================================================================
+--- nestedvm.c	(revision 9404)
++++ nestedvm.c	(working copy)
+@@ -389,7 +389,7 @@
+ 
+     _fe = snew(frontend);
+     _fe->timer_active = FALSE;
+-    _fe->me = midend_new(_fe, &thegame, &nestedvm_drawing, _fe);
++    _fe->me = midend_new(_fe, &thegame, &nestedvm_drawing, _fe, 0);
+     if (argc > 1)
+ 	midend_game_id(_fe->me, argv[1]);   /* ignore failure */
+     midend_new_game(_fe->me);
+Index: tents.c
+===================================================================
+--- tents.c	(revision 9404)
++++ tents.c	(working copy)
+@@ -1447,6 +1447,7 @@
+     game_params p;
+     int *drawn, *numbersdrawn;
+     int cx, cy;         /* last-drawn cursor pos, or (-1,-1) if absent. */
++    int stylus_based;
+ };
+ 
+ #define PREFERRED_TILESIZE 32
+@@ -1458,7 +1459,7 @@
+ 
+ #define FLASH_TIME 0.30F
+ 
+-static int drag_xform(game_ui *ui, int x, int y, int v)
++static int drag_xform(game_ui *ui, game_drawstate *ds, int x, int y, int v)
+ {
+     int xmin, ymin, xmax, ymax;
+ 
+@@ -1467,16 +1468,14 @@
+     ymin = min(ui->dsy, ui->dey);
+     ymax = max(ui->dsy, ui->dey);
+ 
+-#ifndef STYLUS_BASED
+     /*
+      * Left-dragging has no effect, so we treat a left-drag as a
+      * single click on dsx,dsy.
+      */
+-    if (ui->drag_button == LEFT_BUTTON) {
++    if ((ui->drag_button == LEFT_BUTTON) && !ds->stylus_based) {
+         xmin = xmax = ui->dsx;
+         ymin = ymax = ui->dsy;
+     }
+-#endif
+ 
+     if (x < xmin || x > xmax || y < ymin || y > ymax)
+         return v;                      /* no change outside drag area */
+@@ -1491,16 +1490,17 @@
+          * button clears a non-blank square.
+          * If stylus-based however, it loops instead.
+          */
+-        if (ui->drag_button == LEFT_BUTTON)
+-#ifdef STYLUS_BASED
+-            v = (v == BLANK ? TENT : (v == TENT ? NONTENT : BLANK));
+-        else
+-            v = (v == BLANK ? NONTENT : (v == NONTENT ? TENT : BLANK));
+-#else
+-            v = (v == BLANK ? TENT : BLANK);
+-        else
+-            v = (v == BLANK ? NONTENT : BLANK);
+-#endif
++	if (ds->stylus_based) {
++	    if (ui->drag_button == LEFT_BUTTON)
++		v = (v == BLANK ? TENT : (v == TENT ? NONTENT : BLANK));
++	    else
++		v = (v == BLANK ? NONTENT : (v == NONTENT ? TENT : BLANK));
++	} else {
++	    if (ui->drag_button == LEFT_BUTTON)
++		v = (v == BLANK ? TENT : BLANK);
++	    else
++		v = (v == BLANK ? NONTENT : BLANK);
++	}
+     } else {
+         /*
+          * Results of a drag. Left-dragging has no effect.
+@@ -1509,12 +1509,8 @@
+          */
+         if (ui->drag_button == RIGHT_BUTTON)
+             v = (v == BLANK ? NONTENT : v);
+-        else
+-#ifdef STYLUS_BASED
++        else if (ds->stylus_based)
+             v = (v == BLANK ? NONTENT : v);
+-#else
+-            /* do nothing */;
+-#endif
+     }
+ 
+     return v;
+@@ -1591,7 +1587,7 @@
+         sep = "";
+         for (y = ymin; y <= ymax; y++)
+             for (x = xmin; x <= xmax; x++) {
+-                int v = drag_xform(ui, x, y, state->grid[y*w+x]);
++                int v = drag_xform(ui, ds, x, y, state->grid[y*w+x]);
+                 if (state->grid[y*w+x] != v) {
+                     tmplen = sprintf(tmpbuf, "%s%c%d,%d", sep,
+                                      (int)(v == BLANK ? 'B' :
+@@ -1920,6 +1916,8 @@
+ 	ds->numbersdrawn[i] = 2;
+     ds->cx = ds->cy = -1;
+ 
++    ds->stylus_based = drawing_stylus_based(dr);
++
+     return ds;
+ }
+ 
+@@ -2416,7 +2414,7 @@
+ 	tmpgrid = snewn(w*h, char);
+ 	memcpy(tmpgrid, state->grid, w*h);
+ 	tmpgrid[ui->dsy * w + ui->dsx] =
+-	    drag_xform(ui, ui->dsx, ui->dsy, tmpgrid[ui->dsy * w + ui->dsx]);
++	    drag_xform(ui, ds, ui->dsx, ui->dsy, tmpgrid[ui->dsy * w + ui->dsx]);
+ 	errors = find_errors(state, tmpgrid);
+ 	sfree(tmpgrid);
+     } else {
+@@ -2438,7 +2436,7 @@
+              * flickering on and off disconcertingly.
+              */
+             if (ui && ui->drag_button >= 0)
+-                v = drag_xform(ui, x, y, v);
++                v = drag_xform(ui, ds, x, y, v);
+ 
+             if (flashing && (v == TREE || v == TENT))
+                 v = NONTENT;
+Index: ps.c
+===================================================================
+--- ps.c	(revision 9404)
++++ ps.c	(working copy)
+@@ -416,7 +416,7 @@
+     ps->ytop = 0;
+     ps->clipped = FALSE;
+     ps->hatchthick = ps->hatchspace = ps->gamewidth = ps->gameheight = 0;
+-    ps->drawing = drawing_new(&ps_drawing, NULL, ps);
++    ps->drawing = drawing_new(&ps_drawing, NULL, ps, 0);
+ 
+     return ps;
+ }
