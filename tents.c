@@ -1447,6 +1447,7 @@ struct game_drawstate {
     game_params p;
     int *drawn, *numbersdrawn;
     int cx, cy;         /* last-drawn cursor pos, or (-1,-1) if absent. */
+    int stylus_based;
 };
 
 #define PREFERRED_TILESIZE 32
@@ -1458,7 +1459,7 @@ struct game_drawstate {
 
 #define FLASH_TIME 0.30F
 
-static int drag_xform(game_ui *ui, int x, int y, int v)
+static int drag_xform(game_ui *ui, game_drawstate *ds, int x, int y, int v)
 {
     int xmin, ymin, xmax, ymax;
 
@@ -1467,16 +1468,14 @@ static int drag_xform(game_ui *ui, int x, int y, int v)
     ymin = min(ui->dsy, ui->dey);
     ymax = max(ui->dsy, ui->dey);
 
-#ifndef STYLUS_BASED
     /*
      * Left-dragging has no effect, so we treat a left-drag as a
      * single click on dsx,dsy.
      */
-    if (ui->drag_button == LEFT_BUTTON) {
+    if ((ui->drag_button == LEFT_BUTTON) && !ds->stylus_based) {
         xmin = xmax = ui->dsx;
         ymin = ymax = ui->dsy;
     }
-#endif
 
     if (x < xmin || x > xmax || y < ymin || y > ymax)
         return v;                      /* no change outside drag area */
@@ -1491,16 +1490,17 @@ static int drag_xform(game_ui *ui, int x, int y, int v)
          * button clears a non-blank square.
          * If stylus-based however, it loops instead.
          */
-        if (ui->drag_button == LEFT_BUTTON)
-#ifdef STYLUS_BASED
-            v = (v == BLANK ? TENT : (v == TENT ? NONTENT : BLANK));
-        else
-            v = (v == BLANK ? NONTENT : (v == NONTENT ? TENT : BLANK));
-#else
-            v = (v == BLANK ? TENT : BLANK);
-        else
-            v = (v == BLANK ? NONTENT : BLANK);
-#endif
+	if (ds->stylus_based) {
+	    if (ui->drag_button == LEFT_BUTTON)
+		v = (v == BLANK ? TENT : (v == TENT ? NONTENT : BLANK));
+	    else
+		v = (v == BLANK ? NONTENT : (v == NONTENT ? TENT : BLANK));
+	} else {
+	    if (ui->drag_button == LEFT_BUTTON)
+		v = (v == BLANK ? TENT : BLANK);
+	    else
+		v = (v == BLANK ? NONTENT : BLANK);
+	}
     } else {
         /*
          * Results of a drag. Left-dragging has no effect.
@@ -1509,12 +1509,8 @@ static int drag_xform(game_ui *ui, int x, int y, int v)
          */
         if (ui->drag_button == RIGHT_BUTTON)
             v = (v == BLANK ? NONTENT : v);
-        else
-#ifdef STYLUS_BASED
+        else if (ds->stylus_based)
             v = (v == BLANK ? NONTENT : v);
-#else
-            /* do nothing */;
-#endif
     }
 
     return v;
@@ -1591,7 +1587,7 @@ static char *interpret_move(game_state *state, game_ui *ui, game_drawstate *ds,
         sep = "";
         for (y = ymin; y <= ymax; y++)
             for (x = xmin; x <= xmax; x++) {
-                int v = drag_xform(ui, x, y, state->grid[y*w+x]);
+                int v = drag_xform(ui, ds, x, y, state->grid[y*w+x]);
                 if (state->grid[y*w+x] != v) {
                     tmplen = sprintf(tmpbuf, "%s%c%d,%d", sep,
                                      (int)(v == BLANK ? 'B' :
@@ -1919,6 +1915,8 @@ static game_drawstate *game_new_drawstate(drawing *dr, game_state *state)
     for (i = 0; i < w+h; i++)
 	ds->numbersdrawn[i] = 2;
     ds->cx = ds->cy = -1;
+
+    ds->stylus_based = drawing_stylus_based(dr);
 
     return ds;
 }
@@ -2416,7 +2414,7 @@ static void int_redraw(drawing *dr, game_drawstate *ds, game_state *oldstate,
 	tmpgrid = snewn(w*h, char);
 	memcpy(tmpgrid, state->grid, w*h);
 	tmpgrid[ui->dsy * w + ui->dsx] =
-	    drag_xform(ui, ui->dsx, ui->dsy, tmpgrid[ui->dsy * w + ui->dsx]);
+	    drag_xform(ui, ds, ui->dsx, ui->dsy, tmpgrid[ui->dsy * w + ui->dsx]);
 	errors = find_errors(state, tmpgrid);
 	sfree(tmpgrid);
     } else {
@@ -2438,7 +2436,7 @@ static void int_redraw(drawing *dr, game_drawstate *ds, game_state *oldstate,
              * flickering on and off disconcertingly.
              */
             if (ui && ui->drag_button >= 0)
-                v = drag_xform(ui, x, y, v);
+                v = drag_xform(ui, ds, x, y, v);
 
             if (flashing && (v == TREE || v == TENT))
                 v = NONTENT;

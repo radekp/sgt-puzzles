@@ -83,7 +83,6 @@ enum {
   #define SMALL_SCREEN
   #define PORTRAIT_SCREEN
   #define VIVID_COLOURS
-  #define STYLUS_BASED
 #endif
 
 #define IGNOREARG(x) ( (x) = (x) )
@@ -174,7 +173,8 @@ void get_random_seed(void **randseed, int *randseedsize);
 /*
  * drawing.c
  */
-drawing *drawing_new(const drawing_api *api, midend *me, void *handle);
+drawing *drawing_new(const drawing_api *api, midend *me, void *handle,
+		     int stylus_based);
 void drawing_free(drawing *dr);
 void draw_text(drawing *dr, int x, int y, int fonttype, int fontsize,
                int align, int colour, char *text);
@@ -222,11 +222,18 @@ int print_rgb_hatched_colour(drawing *dr, float r, float g, float b,
 void print_line_width(drawing *dr, int width);
 void print_line_dotted(drawing *dr, int dotted);
 
+#ifdef STANDALONE_SOLVER
+#define drawing_stylus_based(dr) 0
+#else
+int drawing_stylus_based(drawing *dr);
+#endif
+
 /*
  * midend.c
  */
 midend *midend_new(frontend *fe, const game *ourgame,
-		   const drawing_api *drapi, void *drhandle);
+		   const drawing_api *drapi, void *drhandle,
+		   int stylus_based);
 void midend_free(midend *me);
 void midend_set_params(midend *me, game_params *params);
 game_params *midend_get_params(midend *me);

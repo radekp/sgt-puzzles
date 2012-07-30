@@ -1860,6 +1860,7 @@ struct game_drawstate {
     int w, h;
     unsigned int *flags;         /* width * height */
     int started;
+    int stylus_based;
 };
 
 
@@ -1914,19 +1915,25 @@ static char *interpret_move(game_state *state, game_ui *ui, game_drawstate *ds,
         if (flags & F_BLACK)
             return nullret;
         if (action == FLIP_LIGHT) {
-#ifdef STYLUS_BASED
-            if (flags & F_IMPOSSIBLE || flags & F_LIGHT) c = 'I'; else c = 'L';
-#else
-            if (flags & F_IMPOSSIBLE) return nullret;
-            c = 'L';
-#endif
+	    if (ds->stylus_based) {
+		if (flags & F_IMPOSSIBLE || flags & F_LIGHT)
+		    c = 'I';
+		else
+		    c = 'L';
+	    } else {
+		if (flags & F_IMPOSSIBLE) return nullret;
+		c = 'L';
+	    }
         } else {
-#ifdef STYLUS_BASED
-            if (flags & F_IMPOSSIBLE || flags & F_LIGHT) c = 'L'; else c = 'I';
-#else
-            if (flags & F_LIGHT) return nullret;
-            c = 'I';
-#endif
+	    if (ds->stylus_based) {
+		if (flags & F_IMPOSSIBLE || flags & F_LIGHT)
+		    c = 'L';
+		else
+		    c = 'I';
+	    } else {
+		if (flags & F_LIGHT) return nullret;
+		c = 'I';
+	    }
         }
         sprintf(buf, "%c%d,%d", (int)c, cx, cy);
         break;
@@ -2048,6 +2055,8 @@ static game_drawstate *game_new_drawstate(drawing *dr, game_state *state)
         ds->flags[i] = -1;
 
     ds->started = 0;
+
+    ds->stylus_based = drawing_stylus_based(dr);
 
     return ds;
 }

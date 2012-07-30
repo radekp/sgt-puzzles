@@ -539,7 +539,7 @@ struct frontend {
 
     fe.window = self;
 
-    me = midend_new(&fe, ourgame, &osx_drawing, &fe);
+    me = midend_new(&fe, ourgame, &osx_drawing, &fe, 0);
     /*
      * If we ever need to open a fresh window using a provided game
      * ID, I think the right thing is to move most of this method

@@ -389,7 +389,7 @@ int main(int argc, char **argv)
 
     _fe = snew(frontend);
     _fe->timer_active = FALSE;
-    _fe->me = midend_new(_fe, &thegame, &nestedvm_drawing, _fe);
+    _fe->me = midend_new(_fe, &thegame, &nestedvm_drawing, _fe, 0);
     if (argc > 1)
 	midend_game_id(_fe->me, argv[1]);   /* ignore failure */
     midend_new_game(_fe->me);

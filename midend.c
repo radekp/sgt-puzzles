@@ -92,7 +92,8 @@ struct midend {
 } while (0)
 
 midend *midend_new(frontend *fe, const game *ourgame,
-		   const drawing_api *drapi, void *drhandle)
+		   const drawing_api *drapi, void *drhandle,
+		   int stylus_based)
 {
     midend *me = snew(midend);
     void *randseed;
@@ -127,7 +128,7 @@ midend *midend_new(frontend *fe, const game *ourgame,
     me->elapsed = 0.0F;
     me->tilesize = me->winwidth = me->winheight = 0;
     if (drapi)
-	me->drawing = drawing_new(drapi, me, drhandle);
+	me->drawing = drawing_new(drapi, me, drhandle, stylus_based);
     else
 	me->drawing = NULL;
 

@@ -12,21 +12,6 @@
 #include "puzzles.h"
 #include "tree234.h"
 
-/*
- * The standard user interface for Net simply has left- and
- * right-button mouse clicks in a square rotate it one way or the
- * other. We also provide, by #ifdef, a separate interface based on
- * rotational dragging motions. I initially developed this for the
- * Mac on the basis that it might work better than the click
- * interface with only one mouse button available, but in fact
- * found it to be quite strange and unintuitive. Apparently it
- * works better on stylus-driven platforms such as Palm and
- * PocketPC, though, so we enable it by default there.
- */
-#ifdef STYLUS_BASED
-#define USE_DRAGGING
-#endif
-
 #define MATMUL(xr,yr,m,x,y) do { \
     float rx, ry, xx = (x), yy = (y), *mat = (m); \
     rx = mat[0] * xx + mat[2] * yy; \
@@ -1861,9 +1846,7 @@ struct game_ui {
     int cur_x, cur_y;
     int cur_visible;
     random_state *rs; /* used for jumbling */
-#ifdef USE_DRAGGING
     int dragtilex, dragtiley, dragstartx, dragstarty, dragged;
-#endif
 };
 
 static game_ui *new_ui(game_state *state)
@@ -1916,6 +1899,8 @@ struct game_drawstate {
     int org_x, org_y;
     int tilesize;
     unsigned char *visible;
+    int stylus_based;
+    int use_dragging;
 };
 
 /* ----------------------------------------------------------------------
@@ -1938,12 +1923,10 @@ static char *interpret_move(game_state *state, game_ui *ui,
 
     if (button == LEFT_BUTTON ||
 	button == MIDDLE_BUTTON ||
-#ifdef USE_DRAGGING
-	button == LEFT_DRAG ||
-	button == LEFT_RELEASE ||
-	button == RIGHT_DRAG ||
-	button == RIGHT_RELEASE ||
-#endif
+	(ds->use_dragging && (button == LEFT_DRAG ||
+			      button == LEFT_RELEASE ||
+			      button == RIGHT_DRAG ||
+			      button == RIGHT_RELEASE)) ||
 	button == RIGHT_BUTTON) {
 
 	if (ui->cur_visible) {
@@ -1969,111 +1952,101 @@ static char *interpret_move(game_state *state, game_ui *ui,
 	    y % TILE_SIZE >= TILE_SIZE - TILE_BORDER)
 	    return nullret;
 
-#ifdef USE_DRAGGING
+	if (ds->use_dragging) {
 
-        if (button == MIDDLE_BUTTON
-#ifdef STYLUS_BASED
-	    || button == RIGHT_BUTTON  /* with a stylus, `right-click' locks */
-#endif
-	    ) {
-            /*
-             * Middle button never drags: it only toggles the lock.
-             */
-            action = TOGGLE_LOCK;
-        } else if (button == LEFT_BUTTON
-#ifndef STYLUS_BASED
-                   || button == RIGHT_BUTTON /* (see above) */
-#endif
-                  ) {
-            /*
-             * Otherwise, we note down the start point for a drag.
-             */
-            ui->dragtilex = tx;
-            ui->dragtiley = ty;
-            ui->dragstartx = x % TILE_SIZE;
-            ui->dragstarty = y % TILE_SIZE;
-            ui->dragged = FALSE;
-            return nullret;            /* no actual action */
-        } else if (button == LEFT_DRAG
-#ifndef STYLUS_BASED
-                   || button == RIGHT_DRAG
-#endif
-                  ) {
-            /*
-             * Find the new drag point and see if it necessitates a
-             * rotation.
-             */
-            int x0,y0, xA,yA, xC,yC, xF,yF;
-            int mx, my;
-            int d0, dA, dC, dF, dmin;
+	    if (button == MIDDLE_BUTTON
+		|| (ds->stylus_based && (button == RIGHT_BUTTON))) {
+				/* with a stylus, `right-click' locks */
+		/*
+		 * Middle button never drags: it only toggles the lock.
+		 */
+		action = TOGGLE_LOCK;
+	    } else if (button == LEFT_BUTTON
+		       || ((button == RIGHT_BUTTON) && !ds->stylus_based)) {
+				/* (see above) */
+		/*
+		 * Otherwise, we note down the start point for a drag.
+		 */
+		ui->dragtilex = tx;
+		ui->dragtiley = ty;
+		ui->dragstartx = x % TILE_SIZE;
+		ui->dragstarty = y % TILE_SIZE;
+		ui->dragged = FALSE;
+		return nullret;            /* no actual action */
+	    } else if (button == LEFT_DRAG
+		       || ((button == RIGHT_DRAG) && !ds->stylus_based)) {
+		/*
+		 * Find the new drag point and see if it necessitates a
+		 * rotation.
+		 */
+		int x0,y0, xA,yA, xC,yC, xF,yF;
+		int mx, my;
+		int d0, dA, dC, dF, dmin;
 
-            tx = ui->dragtilex;
-            ty = ui->dragtiley;
+		tx = ui->dragtilex;
+		ty = ui->dragtiley;
 
-            mx = x - (ui->dragtilex * TILE_SIZE);
-            my = y - (ui->dragtiley * TILE_SIZE);
+		mx = x - (ui->dragtilex * TILE_SIZE);
+		my = y - (ui->dragtiley * TILE_SIZE);
 
-            x0 = ui->dragstartx;
-            y0 = ui->dragstarty;
-            xA = ui->dragstarty;
-            yA = TILE_SIZE-1 - ui->dragstartx;
-            xF = TILE_SIZE-1 - ui->dragstartx;
-            yF = TILE_SIZE-1 - ui->dragstarty;
-            xC = TILE_SIZE-1 - ui->dragstarty;
-            yC = ui->dragstartx;
+		x0 = ui->dragstartx;
+		y0 = ui->dragstarty;
+		xA = ui->dragstarty;
+		yA = TILE_SIZE-1 - ui->dragstartx;
+		xF = TILE_SIZE-1 - ui->dragstartx;
+		yF = TILE_SIZE-1 - ui->dragstarty;
+		xC = TILE_SIZE-1 - ui->dragstarty;
+		yC = ui->dragstartx;
 
-            d0 = (mx-x0)*(mx-x0) + (my-y0)*(my-y0);
-            dA = (mx-xA)*(mx-xA) + (my-yA)*(my-yA);
-            dF = (mx-xF)*(mx-xF) + (my-yF)*(my-yF);
-            dC = (mx-xC)*(mx-xC) + (my-yC)*(my-yC);
+		d0 = (mx-x0)*(mx-x0) + (my-y0)*(my-y0);
+		dA = (mx-xA)*(mx-xA) + (my-yA)*(my-yA);
+		dF = (mx-xF)*(mx-xF) + (my-yF)*(my-yF);
+		dC = (mx-xC)*(mx-xC) + (my-yC)*(my-yC);
 
-            dmin = min(min(d0,dA),min(dF,dC));
+		dmin = min(min(d0,dA),min(dF,dC));
 
-            if (d0 == dmin) {
-                return nullret;
-            } else if (dF == dmin) {
-                action = ROTATE_180;
-                ui->dragstartx = xF;
-                ui->dragstarty = yF;
-                ui->dragged = TRUE;
-            } else if (dA == dmin) {
-                action = ROTATE_LEFT;
-                ui->dragstartx = xA;
-                ui->dragstarty = yA;
-                ui->dragged = TRUE;
-            } else /* dC == dmin */ {
-                action = ROTATE_RIGHT;
-                ui->dragstartx = xC;
-                ui->dragstarty = yC;
-                ui->dragged = TRUE;
-            }
-        } else if (button == LEFT_RELEASE
-#ifndef STYLUS_BASED
-                   || button == RIGHT_RELEASE
-#endif
-                  ) {
-            if (!ui->dragged) {
-                /*
-                 * There was a click but no perceptible drag:
-                 * revert to single-click behaviour.
-                 */
-                tx = ui->dragtilex;
-                ty = ui->dragtiley;
+		if (d0 == dmin) {
+		    return nullret;
+		} else if (dF == dmin) {
+		    action = ROTATE_180;
+		    ui->dragstartx = xF;
+		    ui->dragstarty = yF;
+		    ui->dragged = TRUE;
+		} else if (dA == dmin) {
+		    action = ROTATE_LEFT;
+		    ui->dragstartx = xA;
+		    ui->dragstarty = yA;
+		    ui->dragged = TRUE;
+		} else /* dC == dmin */ {
+		    action = ROTATE_RIGHT;
+		    ui->dragstartx = xC;
+		    ui->dragstarty = yC;
+		    ui->dragged = TRUE;
+		}
+	    } else if (button == LEFT_RELEASE
+		       || ((button == RIGHT_RELEASE) && !ds->stylus_based)) {
+		if (!ui->dragged) {
+		    /*
+		     * There was a click but no perceptible drag:
+		     * revert to single-click behaviour.
+		     */
+		    tx = ui->dragtilex;
+		    ty = ui->dragtiley;
 
-                if (button == LEFT_RELEASE)
-                    action = ROTATE_LEFT;
-                else
-                    action = ROTATE_RIGHT;
-            } else
-                return nullret;        /* no action */
-        }
+		    if (button == LEFT_RELEASE)
+			action = ROTATE_LEFT;
+		    else
+			action = ROTATE_RIGHT;
+		} else
+		    return nullret;        /* no action */
+	    }
 
-#else /* USE_DRAGGING */
+	} else {
 
-	action = (button == LEFT_BUTTON ? ROTATE_LEFT :
-		  button == RIGHT_BUTTON ? ROTATE_RIGHT : TOGGLE_LOCK);
+	    action = (button == LEFT_BUTTON ? ROTATE_LEFT :
+		      button == RIGHT_BUTTON ? ROTATE_RIGHT : TOGGLE_LOCK);
 
-#endif /* USE_DRAGGING */
+	}
 
     } else if (IS_CURSOR_MOVE(button)) {
         switch (button) {
@@ -2297,6 +2270,25 @@ static game_drawstate *game_new_drawstate(drawing *dr, game_state *state)
     ds->tilesize = 0;                  /* undecided yet */
     memset(ds->visible, 0xFF, state->width * state->height);
 
+    ds->stylus_based = drawing_stylus_based(dr);
+
+    /*
+     * The standard user interface for Net simply has left- and
+     * right-button mouse clicks in a square rotate it one way or the
+     * other. We also provide, by #ifdef, a separate interface based on
+     * rotational dragging motions. I initially developed this for the
+     * Mac on the basis that it might work better than the click
+     * interface with only one mouse button available, but in fact
+     * found it to be quite strange and unintuitive. Apparently it
+     * works better on stylus-driven platforms such as Palm and
+     * PocketPC, though, so we enable it by default there.
+     */
+#ifdef USE_DRAGGING
+    ds->use_dragging = 1;
+#else
+    ds->use_dragging = ds->stylus_based;
+#endif
+    
     return ds;
 }
 

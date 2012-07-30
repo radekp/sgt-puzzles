@@ -830,6 +830,7 @@ struct game_drawstate {
     int tilesize;
     unsigned char *visible;
     int cur_x, cur_y;
+    int stylus_based;
 };
 
 static char *interpret_move(game_state *state, game_ui *ui, game_drawstate *ds,
@@ -843,28 +844,26 @@ static char *interpret_move(game_state *state, game_ui *ui, game_drawstate *ds,
     if (x >= 0 && x < state->w && y >= 0 && y < state->h &&
         (button == LEFT_BUTTON || button == RIGHT_BUTTON ||
          button == MIDDLE_BUTTON)) {
-#ifdef STYLUS_BASED
         int currstate = state->grid[y * state->w + x];
-#endif
 
         ui->dragging = TRUE;
 
         if (button == LEFT_BUTTON) {
             ui->drag = LEFT_DRAG;
             ui->release = LEFT_RELEASE;
-#ifdef STYLUS_BASED
-            ui->state = (currstate + 2) % 3; /* FULL -> EMPTY -> UNKNOWN */
-#else
-            ui->state = GRID_FULL;
-#endif
+	    if (ds->stylus_based) {
+		ui->state = (currstate + 2) % 3; /* FULL -> EMPTY -> UNKNOWN */
+	    } else {
+		ui->state = GRID_FULL;
+	    }
         } else if (button == RIGHT_BUTTON) {
             ui->drag = RIGHT_DRAG;
             ui->release = RIGHT_RELEASE;
-#ifdef STYLUS_BASED
-            ui->state = (currstate + 1) % 3; /* EMPTY -> FULL -> UNKNOWN */
-#else
-            ui->state = GRID_EMPTY;
-#endif
+	    if (ds->stylus_based) {
+		ui->state = (currstate + 1) % 3; /* EMPTY -> FULL -> UNKNOWN */
+	    } else {
+		ui->state = GRID_EMPTY;
+	    }
         } else /* if (button == MIDDLE_BUTTON) */ {
             ui->drag = MIDDLE_DRAG;
             ui->release = MIDDLE_RELEASE;
@@ -1091,6 +1090,8 @@ static game_drawstate *game_new_drawstate(drawing *dr, game_state *state)
     ds->tilesize = 0;                  /* not decided yet */
     memset(ds->visible, 255, ds->w * ds->h);
     ds->cur_x = ds->cur_y = 0;
+
+    ds->stylus_based = drawing_stylus_based(dr);
 
     return ds;
 }

@@ -1010,7 +1010,7 @@ void print(frontend *fe)
 	    if (!nme) {
 		game_params *params;
 
-		nme = midend_new(NULL, fe->game, NULL, NULL);
+		nme = midend_new(NULL, fe->game, NULL, NULL, 0);
 
 		/*
 		 * Set the non-interactive mid-end to have the same
@@ -1073,7 +1073,7 @@ void print(frontend *fe)
     fe->drawstatus = PRINTING;
     fe->hdc = pd.hDC;
 
-    fe->dr = drawing_new(&win_drawing, NULL, fe);
+    fe->dr = drawing_new(&win_drawing, NULL, fe, 0);
     document_print(doc, fe->dr);
     drawing_free(fe->dr);
     fe->dr = NULL;
@@ -1559,7 +1559,14 @@ static int new_game(frontend *fe, const game *game, char *game_id, char **error)
     fe->game = game;
 
     if (fe->me) midend_free(fe->me);
-    fe->me = midend_new(fe, fe->game, &win_drawing, fe);
+    fe->me = midend_new(fe, fe->game, &win_drawing, fe,
+#ifdef _WIN32_WCE
+  /* For Pocket PC devices we assume 'stylus based' behaviour. */
+			1
+#else
+			0
+#endif
+			);
 
     if (game_id) {
         *error = midend_game_id(fe->me, game_id);

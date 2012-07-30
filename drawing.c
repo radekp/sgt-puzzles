@@ -48,9 +48,34 @@ struct drawing {
      * this may set it to NULL. */
     midend *me;
     char *laststatus;
+
+    /*
+     * Whether to make UI and game play modifications suitable for
+     * "stylus based" systems.  These include the following.
+     *
+     * 1. Providing "Undo" and "Redo" as small buttons, instead of in
+     * the menu (and as well as via keyboard shortcuts).
+     *
+     * 2. Providing a row of number buttons, in games like Solo that
+     * expect number keys ("1".."9").
+     * 
+     * 3. In games like Loopy, where a right click is used to mark
+     * some possibility as eliminated, the logic of a left click
+     * (i.e. stylus touch) is changed so as to cycle between
+     * "indeterminate", "positively chosen" and "eliminated" states;
+     * instead of just between "indeterminate" and "positively
+     * chosen".
+     * 
+     * 4. In Net, where left and right clicks indicate rotation in
+     * opposing directions, stylus_based modifies the code to allow
+     * mouse dragging to indicate the direction instead.
+     * 
+     */
+    int stylus_based;
 };
 
-drawing *drawing_new(const drawing_api *api, midend *me, void *handle)
+drawing *drawing_new(const drawing_api *api, midend *me, void *handle,
+		     int stylus_based)
 {
     drawing *dr = snew(drawing);
     dr->api = api;
@@ -60,6 +85,7 @@ drawing *drawing_new(const drawing_api *api, midend *me, void *handle)
     dr->scale = 1.0F;
     dr->me = me;
     dr->laststatus = NULL;
+    dr->stylus_based = stylus_based;
     return dr;
 }
 
@@ -348,4 +374,9 @@ void print_line_width(drawing *dr, int width)
 void print_line_dotted(drawing *dr, int dotted)
 {
     dr->api->line_dotted(dr->handle, dotted);
+}
+
+int drawing_stylus_based(drawing *dr)
+{
+    return dr ? dr->stylus_based : 0;
 }

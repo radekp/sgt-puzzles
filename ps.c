@@ -416,7 +416,7 @@ psdata *ps_init(FILE *outfile, int colour)
     ps->ytop = 0;
     ps->clipped = FALSE;
     ps->hatchthick = ps->hatchspace = ps->gamewidth = ps->gameheight = 0;
-    ps->drawing = drawing_new(&ps_drawing, NULL, ps);
+    ps->drawing = drawing_new(&ps_drawing, NULL, ps, 0);
 
     return ps;
 }

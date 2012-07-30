@@ -229,6 +229,7 @@ struct game_drawstate {
     char *lines;
     char *clue_error;
     char *clue_satisfied;
+    int stylus_based;
 };
 
 static char *validate_desc(game_params *params, char *desc);
@@ -912,6 +913,8 @@ static game_drawstate *game_new_drawstate(drawing *dr, game_state *state)
     memset(ds->clue_satisfied, 0, num_faces);
     for (i = 0; i < num_faces; i++)
         ds->textx[i] = ds->texty[i] = -1;
+
+    ds->stylus_based = drawing_stylus_based(dr);
 
     return ds;
 }
@@ -2850,10 +2853,10 @@ static char *interpret_move(game_state *state, game_ui *ui, game_drawstate *ds,
 	    button_char = 'y';
 	    break;
 	  case LINE_YES:
-#ifdef STYLUS_BASED
-	    button_char = 'n';
-	    break;
-#endif
+            if (ds->stylus_based) {
+		button_char = 'n';
+		break;
+	    }
 	  case LINE_NO:
 	    button_char = 'u';
 	    break;
@@ -2868,10 +2871,10 @@ static char *interpret_move(game_state *state, game_ui *ui, game_drawstate *ds,
 	    button_char = 'n';
 	    break;
 	  case LINE_NO:
-#ifdef STYLUS_BASED
-	    button_char = 'y';
-	    break;
-#endif
+            if (ds->stylus_based) {
+		button_char = 'y';
+		break;
+	    }
 	  case LINE_YES:
 	    button_char = 'u';
 	    break;
