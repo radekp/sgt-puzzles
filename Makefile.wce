@@ -153,17 +153,17 @@ pegs.exe: drawing.obj malloc.obj midend.obj misc.obj noicon.res pegs.obj \
 		pegs.rsp
 	link $(LFLAGS) -out:pegs.exe -map:pegs.map @pegs.rsp
 
-puzzles.exe: blackbo3.obj bridges3.obj combi.obj cube3.obj divvy.obj \
-		dominos3.obj drawing.obj dsf.obj fifteen3.obj filling5.obj \
-		flip3.obj galaxie7.obj grid.obj guess3.obj inertia3.obj \
-		keen5.obj latin.obj laydomino.obj lightup5.obj list.obj \
-		loopgen.obj loopy5.obj magnets5.obj malloc.obj map5.obj \
-		maxflow.obj midend.obj mines5.obj misc.obj net3.obj \
-		netslid3.obj noicon.res pattern5.obj pearl5.obj pegs3.obj \
-		penrose.obj printing.obj random.obj range3.obj rect3.obj \
-		samegam3.obj signpos5.obj singles5.obj sixteen3.obj \
-		slant5.obj solo5.obj tdq.obj tents5.obj towers5.obj \
-		tree234.obj twiddle3.obj unequal5.obj untangl3.obj \
+puzzles.exe: blackbo4.obj bridges4.obj combi.obj cube4.obj divvy.obj \
+		dominos4.obj drawing.obj dsf.obj fifteen4.obj filling6.obj \
+		flip4.obj galaxie8.obj grid.obj guess4.obj inertia4.obj \
+		keen6.obj latin.obj laydomino.obj lightup6.obj list.obj \
+		loopgen.obj loopy6.obj magnets6.obj malloc.obj map6.obj \
+		maxflow.obj midend.obj mines6.obj misc.obj net4.obj \
+		netslid4.obj noicon.res pattern6.obj pearl6.obj pegs4.obj \
+		penrose.obj printing.obj random.obj range4.obj rect4.obj \
+		samegam4.obj signpos6.obj singles6.obj sixteen4.obj \
+		slant6.obj solo6.obj tdq.obj tents6.obj towers6.obj \
+		tree234.obj twiddle4.obj unequal6.obj untangl4.obj \
 		version.obj windows1.obj puzzles.rsp
 	link $(LFLAGS) -out:puzzles.exe -map:puzzles.map @puzzles.rsp
 
@@ -368,20 +368,20 @@ pegs.rsp: $(MAKEFILE)
 
 puzzles.rsp: $(MAKEFILE)
 	echo $(BASELIBS) > puzzles.rsp
-	echo blackbo3.obj bridges3.obj combi.obj cube3.obj >> puzzles.rsp
-	echo divvy.obj dominos3.obj drawing.obj dsf.obj >> puzzles.rsp
-	echo fifteen3.obj filling5.obj flip3.obj galaxie7.obj >> puzzles.rsp
-	echo grid.obj guess3.obj inertia3.obj keen5.obj >> puzzles.rsp
-	echo latin.obj laydomino.obj lightup5.obj list.obj >> puzzles.rsp
-	echo loopgen.obj loopy5.obj magnets5.obj malloc.obj >> puzzles.rsp
-	echo map5.obj maxflow.obj midend.obj mines5.obj >> puzzles.rsp
-	echo misc.obj net3.obj netslid3.obj noicon.res >> puzzles.rsp
-	echo pattern5.obj pearl5.obj pegs3.obj penrose.obj >> puzzles.rsp
-	echo printing.obj random.obj range3.obj rect3.obj >> puzzles.rsp
-	echo samegam3.obj signpos5.obj singles5.obj >> puzzles.rsp
-	echo sixteen3.obj slant5.obj solo5.obj tdq.obj >> puzzles.rsp
-	echo tents5.obj towers5.obj tree234.obj twiddle3.obj >> puzzles.rsp
-	echo unequal5.obj untangl3.obj version.obj >> puzzles.rsp
+	echo blackbo4.obj bridges4.obj combi.obj cube4.obj >> puzzles.rsp
+	echo divvy.obj dominos4.obj drawing.obj dsf.obj >> puzzles.rsp
+	echo fifteen4.obj filling6.obj flip4.obj galaxie8.obj >> puzzles.rsp
+	echo grid.obj guess4.obj inertia4.obj keen6.obj >> puzzles.rsp
+	echo latin.obj laydomino.obj lightup6.obj list.obj >> puzzles.rsp
+	echo loopgen.obj loopy6.obj magnets6.obj malloc.obj >> puzzles.rsp
+	echo map6.obj maxflow.obj midend.obj mines6.obj >> puzzles.rsp
+	echo misc.obj net4.obj netslid4.obj noicon.res >> puzzles.rsp
+	echo pattern6.obj pearl6.obj pegs4.obj penrose.obj >> puzzles.rsp
+	echo printing.obj random.obj range4.obj rect4.obj >> puzzles.rsp
+	echo samegam4.obj signpos6.obj singles6.obj >> puzzles.rsp
+	echo sixteen4.obj slant6.obj solo6.obj tdq.obj >> puzzles.rsp
+	echo tents6.obj towers6.obj tree234.obj twiddle4.obj >> puzzles.rsp
+	echo unequal6.obj untangl4.obj version.obj >> puzzles.rsp
 	echo windows1.obj >> puzzles.rsp
 
 range.rsp: $(MAKEFILE)
@@ -467,46 +467,46 @@ untangle.rsp: $(MAKEFILE)
 
 blackbox.obj: .\blackbox.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\blackbox.c /Foblackbox.obj
-blackbo3.obj: .\blackbox.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\blackbox.c /Foblackbo3.obj
+blackbo4.obj: .\blackbox.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\blackbox.c /Foblackbo4.obj
 bridges.obj: .\bridges.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\bridges.c /Fobridges.obj
-bridges3.obj: .\bridges.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\bridges.c /Fobridges3.obj
+bridges4.obj: .\bridges.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\bridges.c /Fobridges4.obj
 combi.obj: .\combi.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\combi.c /Focombi.obj
 cube.obj: .\cube.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\cube.c /Focube.obj
-cube3.obj: .\cube.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\cube.c /Focube3.obj
+cube4.obj: .\cube.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\cube.c /Focube4.obj
 divvy.obj: .\divvy.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\divvy.c /Fodivvy.obj
 dominosa.obj: .\dominosa.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\dominosa.c /Fodominosa.obj
-dominos3.obj: .\dominosa.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\dominosa.c /Fodominos3.obj
+dominos4.obj: .\dominosa.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\dominosa.c /Fodominos4.obj
 drawing.obj: .\drawing.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\drawing.c /Fodrawing.obj
 dsf.obj: .\dsf.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\dsf.c /Fodsf.obj
 fifteen.obj: .\fifteen.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\fifteen.c /Fofifteen.obj
-fifteen3.obj: .\fifteen.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\fifteen.c /Fofifteen3.obj
+fifteen4.obj: .\fifteen.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\fifteen.c /Fofifteen4.obj
 filling.obj: .\filling.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\filling.c /Fofilling.obj
-filling5.obj: .\filling.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\filling.c /Fofilling5.obj
+filling6.obj: .\filling.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\filling.c /Fofilling6.obj
 filling2.obj: .\filling.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\filling.c /Fofilling2.obj
 flip.obj: .\flip.c .\puzzles.h .\tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\flip.c /Foflip.obj
-flip3.obj: .\flip.c .\puzzles.h .\tree234.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\flip.c /Foflip3.obj
+flip4.obj: .\flip.c .\puzzles.h .\tree234.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\flip.c /Foflip4.obj
 galaxies.obj: .\galaxies.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\galaxies.c /Fogalaxies.obj
-galaxie7.obj: .\galaxies.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\galaxies.c /Fogalaxie7.obj
+galaxie8.obj: .\galaxies.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\galaxies.c /Fogalaxie8.obj
 galaxie4.obj: .\galaxies.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_PICTURE_GENERATOR /c .\galaxies.c /Fogalaxie4.obj
 galaxie2.obj: .\galaxies.c .\puzzles.h
@@ -517,16 +517,16 @@ gtk.obj: .\gtk.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\gtk.c /Fogtk.obj
 guess.obj: .\guess.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\guess.c /Foguess.obj
-guess3.obj: .\guess.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\guess.c /Foguess3.obj
+guess4.obj: .\guess.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\guess.c /Foguess4.obj
 inertia.obj: .\inertia.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\inertia.c /Foinertia.obj
-inertia3.obj: .\inertia.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\inertia.c /Foinertia3.obj
+inertia4.obj: .\inertia.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\inertia.c /Foinertia4.obj
 keen.obj: .\keen.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\keen.c /Fokeen.obj
-keen5.obj: .\keen.c .\puzzles.h .\latin.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\keen.c /Fokeen5.obj
+keen6.obj: .\keen.c .\puzzles.h .\latin.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\keen.c /Fokeen6.obj
 keen2.obj: .\keen.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\keen.c /Fokeen2.obj
 latin.obj: .\latin.c .\puzzles.h .\tree234.h .\maxflow.h .\latin.h
@@ -539,8 +539,8 @@ laydomino.obj: .\laydomino.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\laydomino.c /Folaydomino.obj
 lightup.obj: .\lightup.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\lightup.c /Folightup.obj
-lightup5.obj: .\lightup.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\lightup.c /Folightup5.obj
+lightup6.obj: .\lightup.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\lightup.c /Folightup6.obj
 lightup2.obj: .\lightup.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\lightup.c /Folightup2.obj
 list.obj: .\list.c .\puzzles.h
@@ -549,22 +549,22 @@ loopgen.obj: .\loopgen.c .\puzzles.h .\tree234.h .\grid.h .\loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\loopgen.c /Foloopgen.obj
 loopy.obj: .\loopy.c .\puzzles.h .\tree234.h .\grid.h .\loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\loopy.c /Foloopy.obj
-loopy5.obj: .\loopy.c .\puzzles.h .\tree234.h .\grid.h .\loopgen.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\loopy.c /Foloopy5.obj
+loopy6.obj: .\loopy.c .\puzzles.h .\tree234.h .\grid.h .\loopgen.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\loopy.c /Foloopy6.obj
 loopy2.obj: .\loopy.c .\puzzles.h .\tree234.h .\grid.h .\loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\loopy.c /Foloopy2.obj
 magnets.obj: .\magnets.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\magnets.c /Fomagnets.obj
-magnets5.obj: .\magnets.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\magnets.c /Fomagnets5.obj
+magnets6.obj: .\magnets.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\magnets.c /Fomagnets6.obj
 magnets2.obj: .\magnets.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\magnets.c /Fomagnets2.obj
 malloc.obj: .\malloc.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\malloc.c /Fomalloc.obj
 map.obj: .\map.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\map.c /Fomap.obj
-map5.obj: .\map.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\map.c /Fomap5.obj
+map6.obj: .\map.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\map.c /Fomap6.obj
 map2.obj: .\map.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\map.c /Fomap2.obj
 maxflow.obj: .\maxflow.c .\maxflow.h .\puzzles.h
@@ -573,20 +573,20 @@ midend.obj: .\midend.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\midend.c /Fomidend.obj
 mines.obj: .\mines.c .\tree234.h .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\mines.c /Fomines.obj
-mines5.obj: .\mines.c .\tree234.h .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\mines.c /Fomines5.obj
+mines6.obj: .\mines.c .\tree234.h .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\mines.c /Fomines6.obj
 mines2.obj: .\mines.c .\tree234.h .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_OBFUSCATOR /c .\mines.c /Fomines2.obj
 misc.obj: .\misc.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\misc.c /Fomisc.obj
 net.obj: .\net.c .\puzzles.h .\tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\net.c /Fonet.obj
-net3.obj: .\net.c .\puzzles.h .\tree234.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\net.c /Fonet3.obj
+net4.obj: .\net.c .\puzzles.h .\tree234.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\net.c /Fonet4.obj
 netslide.obj: .\netslide.c .\puzzles.h .\tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\netslide.c /Fonetslide.obj
-netslid3.obj: .\netslide.c .\puzzles.h .\tree234.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\netslide.c /Fonetslid3.obj
+netslid4.obj: .\netslide.c .\puzzles.h .\tree234.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\netslide.c /Fonetslid4.obj
 no-icon.obj: .\no-icon.c
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\no-icon.c /Fono-icon.obj
 noicon.res: .\noicon.rc .\puzzles.rc2 .\resource.h
@@ -601,98 +601,100 @@ osx.obj: .\osx.m .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\osx.m /Foosx.obj
 pattern.obj: .\pattern.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\pattern.c /Fopattern.obj
-pattern5.obj: .\pattern.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\pattern.c /Fopattern5.obj
+pattern6.obj: .\pattern.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\pattern.c /Fopattern6.obj
 pattern2.obj: .\pattern.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\pattern.c /Fopattern2.obj
 pearl.obj: .\pearl.c .\puzzles.h .\grid.h .\loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\pearl.c /Fopearl.obj
-pearl5.obj: .\pearl.c .\puzzles.h .\grid.h .\loopgen.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\pearl.c /Fopearl5.obj
+pearl6.obj: .\pearl.c .\puzzles.h .\grid.h .\loopgen.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\pearl.c /Fopearl6.obj
 pearl2.obj: .\pearl.c .\puzzles.h .\grid.h .\loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\pearl.c /Fopearl2.obj
 pegs.obj: .\pegs.c .\puzzles.h .\tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\pegs.c /Fopegs.obj
-pegs3.obj: .\pegs.c .\puzzles.h .\tree234.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\pegs.c /Fopegs3.obj
+pegs4.obj: .\pegs.c .\puzzles.h .\tree234.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\pegs.c /Fopegs4.obj
 penrose.obj: .\penrose.c .\puzzles.h .\penrose.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\penrose.c /Fopenrose.obj
 printing.obj: .\printing.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\printing.c /Foprinting.obj
 ps.obj: .\ps.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\ps.c /Fops.obj
+qt.obj: .\qt.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\qt.c /Foqt.obj
 random.obj: .\random.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\random.c /Forandom.obj
 range.obj: .\range.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\range.c /Forange.obj
-range3.obj: .\range.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\range.c /Forange3.obj
+range4.obj: .\range.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\range.c /Forange4.obj
 rect.obj: .\rect.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\rect.c /Forect.obj
-rect3.obj: .\rect.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\rect.c /Forect3.obj
+rect4.obj: .\rect.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\rect.c /Forect4.obj
 samegame.obj: .\samegame.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\samegame.c /Fosamegame.obj
-samegam3.obj: .\samegame.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\samegame.c /Fosamegam3.obj
+samegam4.obj: .\samegame.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\samegame.c /Fosamegam4.obj
 signpost.obj: .\signpost.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\signpost.c /Fosignpost.obj
-signpos5.obj: .\signpost.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\signpost.c /Fosignpos5.obj
+signpos6.obj: .\signpost.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\signpost.c /Fosignpos6.obj
 signpos2.obj: .\signpost.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\signpost.c /Fosignpos2.obj
 singles.obj: .\singles.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\singles.c /Fosingles.obj
-singles5.obj: .\singles.c .\puzzles.h .\latin.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\singles.c /Fosingles5.obj
+singles6.obj: .\singles.c .\puzzles.h .\latin.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\singles.c /Fosingles6.obj
 singles3.obj: .\singles.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\singles.c /Fosingles3.obj
 sixteen.obj: .\sixteen.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\sixteen.c /Fosixteen.obj
-sixteen3.obj: .\sixteen.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\sixteen.c /Fosixteen3.obj
+sixteen4.obj: .\sixteen.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\sixteen.c /Fosixteen4.obj
 slant.obj: .\slant.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\slant.c /Foslant.obj
-slant5.obj: .\slant.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\slant.c /Foslant5.obj
+slant6.obj: .\slant.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\slant.c /Foslant6.obj
 slant2.obj: .\slant.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\slant.c /Foslant2.obj
 solo.obj: .\solo.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\solo.c /Fosolo.obj
-solo5.obj: .\solo.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\solo.c /Fosolo5.obj
+solo6.obj: .\solo.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\solo.c /Fosolo6.obj
 solo2.obj: .\solo.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\solo.c /Fosolo2.obj
 tdq.obj: .\tdq.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\tdq.c /Fotdq.obj
 tents.obj: .\tents.c .\puzzles.h .\maxflow.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\tents.c /Fotents.obj
-tents5.obj: .\tents.c .\puzzles.h .\maxflow.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\tents.c /Fotents5.obj
+tents6.obj: .\tents.c .\puzzles.h .\maxflow.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\tents.c /Fotents6.obj
 tents3.obj: .\tents.c .\puzzles.h .\maxflow.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\tents.c /Fotents3.obj
 towers.obj: .\towers.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\towers.c /Fotowers.obj
-towers5.obj: .\towers.c .\puzzles.h .\latin.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\towers.c /Fotowers5.obj
+towers6.obj: .\towers.c .\puzzles.h .\latin.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\towers.c /Fotowers6.obj
 towers2.obj: .\towers.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\towers.c /Fotowers2.obj
 tree234.obj: .\tree234.c .\tree234.h .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\tree234.c /Fotree234.obj
 twiddle.obj: .\twiddle.c .\puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\twiddle.c /Fotwiddle.obj
-twiddle3.obj: .\twiddle.c .\puzzles.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\twiddle.c /Fotwiddle3.obj
+twiddle4.obj: .\twiddle.c .\puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\twiddle.c /Fotwiddle4.obj
 unequal.obj: .\unequal.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\unequal.c /Founequal.obj
-unequal5.obj: .\unequal.c .\puzzles.h .\latin.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\unequal.c /Founequal5.obj
+unequal6.obj: .\unequal.c .\puzzles.h .\latin.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\unequal.c /Founequal6.obj
 unequal2.obj: .\unequal.c .\puzzles.h .\latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DSTANDALONE_SOLVER /c .\unequal.c /Founequal2.obj
 untangle.obj: .\untangle.c .\puzzles.h .\tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\untangle.c /Fountangle.obj
-untangl3.obj: .\untangle.c .\puzzles.h .\tree234.h
-	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\untangle.c /Fountangl3.obj
+untangl4.obj: .\untangle.c .\puzzles.h .\tree234.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /DCOMBINED /c .\untangle.c /Fountangl4.obj
 windows.obj: .\windows.c .\puzzles.h .\resource.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) /c .\windows.c /Fowindows.obj
 windows1.obj: .\windows.c .\puzzles.h .\resource.h

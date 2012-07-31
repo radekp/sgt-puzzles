@@ -237,23 +237,23 @@ untangle.mips: drawing.o nestedvm.o malloc.o midend.o misc.o no-icon.o \
 
 blackbox.o: ./blackbox.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-blackbo3.o: ./blackbox.c ./puzzles.h
+blackbo4.o: ./blackbox.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 bridges.o: ./bridges.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-bridges3.o: ./bridges.c ./puzzles.h
+bridges4.o: ./bridges.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 combi.o: ./combi.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 cube.o: ./cube.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-cube3.o: ./cube.c ./puzzles.h
+cube4.o: ./cube.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 divvy.o: ./divvy.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 dominosa.o: ./dominosa.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-dominos3.o: ./dominosa.c ./puzzles.h
+dominos4.o: ./dominosa.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 drawing.o: ./drawing.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -261,21 +261,21 @@ dsf.o: ./dsf.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 fifteen.o: ./fifteen.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-fifteen3.o: ./fifteen.c ./puzzles.h
+fifteen4.o: ./fifteen.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 filling.o: ./filling.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-filling5.o: ./filling.c ./puzzles.h
+filling6.o: ./filling.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 filling2.o: ./filling.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 flip.o: ./flip.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-flip3.o: ./flip.c ./puzzles.h ./tree234.h
+flip4.o: ./flip.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 galaxies.o: ./galaxies.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-galaxie7.o: ./galaxies.c ./puzzles.h
+galaxie8.o: ./galaxies.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 galaxie4.o: ./galaxies.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_PICTURE_GENERATOR -c $< -o $@
@@ -287,15 +287,15 @@ nestedvm.o: ./nestedvm.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 guess.o: ./guess.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-guess3.o: ./guess.c ./puzzles.h
+guess4.o: ./guess.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 inertia.o: ./inertia.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-inertia3.o: ./inertia.c ./puzzles.h
+inertia4.o: ./inertia.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 keen.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-keen5.o: ./keen.c ./puzzles.h ./latin.h
+keen6.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 keen2.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -309,7 +309,7 @@ laydomino.o: ./laydomino.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 lightup.o: ./lightup.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-lightup5.o: ./lightup.c ./puzzles.h
+lightup6.o: ./lightup.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 lightup2.o: ./lightup.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -319,13 +319,13 @@ loopgen.o: ./loopgen.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 loopy.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-loopy5.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
+loopy6.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 loopy2.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 magnets.o: ./magnets.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-magnets5.o: ./magnets.c ./puzzles.h
+magnets6.o: ./magnets.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 magnets2.o: ./magnets.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -333,7 +333,7 @@ malloc.o: ./malloc.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 map.o: ./map.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-map5.o: ./map.c ./puzzles.h
+map6.o: ./map.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 map2.o: ./map.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -343,7 +343,7 @@ midend.o: ./midend.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 mines.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-mines5.o: ./mines.c ./tree234.h ./puzzles.h
+mines6.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 mines2.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_OBFUSCATOR -c $< -o $@
@@ -351,11 +351,11 @@ misc.o: ./misc.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 net.o: ./net.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-net3.o: ./net.c ./puzzles.h ./tree234.h
+net4.o: ./net.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 netslide.o: ./netslide.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-netslid3.o: ./netslide.c ./puzzles.h ./tree234.h
+netslid4.o: ./netslide.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 no-icon.o: ./no-icon.c
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -369,19 +369,19 @@ osx.o: ./osx.m ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 pattern.o: ./pattern.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pattern5.o: ./pattern.c ./puzzles.h
+pattern6.o: ./pattern.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 pattern2.o: ./pattern.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 pearl.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pearl5.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
+pearl6.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 pearl2.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 pegs.o: ./pegs.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pegs3.o: ./pegs.c ./puzzles.h ./tree234.h
+pegs4.o: ./pegs.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 penrose.o: ./penrose.c ./puzzles.h ./penrose.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -389,45 +389,47 @@ printing.o: ./printing.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 ps.o: ./ps.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
+qt.o: ./qt.c ./puzzles.h
+	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 random.o: ./random.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 range.o: ./range.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-range3.o: ./range.c ./puzzles.h
+range4.o: ./range.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 rect.o: ./rect.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-rect3.o: ./rect.c ./puzzles.h
+rect4.o: ./rect.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 samegame.o: ./samegame.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-samegam3.o: ./samegame.c ./puzzles.h
+samegam4.o: ./samegame.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 signpost.o: ./signpost.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-signpos5.o: ./signpost.c ./puzzles.h
+signpos6.o: ./signpost.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 signpos2.o: ./signpost.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 singles.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-singles5.o: ./singles.c ./puzzles.h ./latin.h
+singles6.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 singles3.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 sixteen.o: ./sixteen.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-sixteen3.o: ./sixteen.c ./puzzles.h
+sixteen4.o: ./sixteen.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 slant.o: ./slant.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-slant5.o: ./slant.c ./puzzles.h
+slant6.o: ./slant.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 slant2.o: ./slant.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 solo.o: ./solo.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-solo5.o: ./solo.c ./puzzles.h
+solo6.o: ./solo.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 solo2.o: ./solo.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -435,13 +437,13 @@ tdq.o: ./tdq.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 tents.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-tents5.o: ./tents.c ./puzzles.h ./maxflow.h
+tents6.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 tents3.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 towers.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-towers5.o: ./towers.c ./puzzles.h ./latin.h
+towers6.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 towers2.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -449,17 +451,17 @@ tree234.o: ./tree234.c ./tree234.h ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 twiddle.o: ./twiddle.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-twiddle3.o: ./twiddle.c ./puzzles.h
+twiddle4.o: ./twiddle.c ./puzzles.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 unequal.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-unequal5.o: ./unequal.c ./puzzles.h ./latin.h
+unequal6.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 unequal2.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 untangle.o: ./untangle.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-untangl3.o: ./untangle.c ./puzzles.h ./tree234.h
+untangl4.o: ./untangle.c ./puzzles.h ./tree234.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 windows.o: ./windows.c ./puzzles.h ./resource.h
 	$(CC) $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@

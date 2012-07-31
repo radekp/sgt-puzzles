@@ -72,65 +72,65 @@ Puzzles: Puzzles.app/Contents/MacOS/Puzzles \
 		Puzzles.app/Contents/Resources/Puzzles.icns \
 		Puzzles.app/Contents/Info.plist $(Puzzles_extra)
 
-Puzzles.ppc.bin: blackbo3.ppc.o bridges3.ppc.o combi.ppc.o cube3.ppc.o \
-		divvy.ppc.o dominos3.ppc.o drawing.ppc.o dsf.ppc.o \
-		fifteen3.ppc.o filling5.ppc.o flip3.ppc.o galaxie7.ppc.o \
-		grid.ppc.o guess3.ppc.o inertia3.ppc.o keen5.ppc.o \
-		latin.ppc.o laydomino.ppc.o lightup5.ppc.o list.ppc.o \
-		loopgen.ppc.o loopy5.ppc.o magnets5.ppc.o malloc.ppc.o \
-		map5.ppc.o maxflow.ppc.o midend.ppc.o mines5.ppc.o \
-		misc.ppc.o net3.ppc.o netslid3.ppc.o osx.ppc.o \
-		pattern5.ppc.o pearl5.ppc.o pegs3.ppc.o penrose.ppc.o \
-		random.ppc.o range3.ppc.o rect3.ppc.o samegam3.ppc.o \
-		signpos5.ppc.o singles5.ppc.o sixteen3.ppc.o slant5.ppc.o \
-		solo5.ppc.o tdq.ppc.o tents5.ppc.o towers5.ppc.o \
-		tree234.ppc.o twiddle3.ppc.o unequal5.ppc.o untangl3.ppc.o \
+Puzzles.ppc.bin: blackbo4.ppc.o bridges4.ppc.o combi.ppc.o cube4.ppc.o \
+		divvy.ppc.o dominos4.ppc.o drawing.ppc.o dsf.ppc.o \
+		fifteen4.ppc.o filling6.ppc.o flip4.ppc.o galaxie8.ppc.o \
+		grid.ppc.o guess4.ppc.o inertia4.ppc.o keen6.ppc.o \
+		latin.ppc.o laydomino.ppc.o lightup6.ppc.o list.ppc.o \
+		loopgen.ppc.o loopy6.ppc.o magnets6.ppc.o malloc.ppc.o \
+		map6.ppc.o maxflow.ppc.o midend.ppc.o mines6.ppc.o \
+		misc.ppc.o net4.ppc.o netslid4.ppc.o osx.ppc.o \
+		pattern6.ppc.o pearl6.ppc.o pegs4.ppc.o penrose.ppc.o \
+		random.ppc.o range4.ppc.o rect4.ppc.o samegam4.ppc.o \
+		signpos6.ppc.o singles6.ppc.o sixteen4.ppc.o slant6.ppc.o \
+		solo6.ppc.o tdq.ppc.o tents6.ppc.o towers6.ppc.o \
+		tree234.ppc.o twiddle4.ppc.o unequal6.ppc.o untangl4.ppc.o \
 		version.ppc.o
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(LDFLAGS) -o $@ \
-		blackbo3.ppc.o bridges3.ppc.o combi.ppc.o cube3.ppc.o \
-		divvy.ppc.o dominos3.ppc.o drawing.ppc.o dsf.ppc.o \
-		fifteen3.ppc.o filling5.ppc.o flip3.ppc.o galaxie7.ppc.o \
-		grid.ppc.o guess3.ppc.o inertia3.ppc.o keen5.ppc.o \
-		latin.ppc.o laydomino.ppc.o lightup5.ppc.o list.ppc.o \
-		loopgen.ppc.o loopy5.ppc.o magnets5.ppc.o malloc.ppc.o \
-		map5.ppc.o maxflow.ppc.o midend.ppc.o mines5.ppc.o \
-		misc.ppc.o net3.ppc.o netslid3.ppc.o osx.ppc.o \
-		pattern5.ppc.o pearl5.ppc.o pegs3.ppc.o penrose.ppc.o \
-		random.ppc.o range3.ppc.o rect3.ppc.o samegam3.ppc.o \
-		signpos5.ppc.o singles5.ppc.o sixteen3.ppc.o slant5.ppc.o \
-		solo5.ppc.o tdq.ppc.o tents5.ppc.o towers5.ppc.o \
-		tree234.ppc.o twiddle3.ppc.o unequal5.ppc.o untangl3.ppc.o \
+		blackbo4.ppc.o bridges4.ppc.o combi.ppc.o cube4.ppc.o \
+		divvy.ppc.o dominos4.ppc.o drawing.ppc.o dsf.ppc.o \
+		fifteen4.ppc.o filling6.ppc.o flip4.ppc.o galaxie8.ppc.o \
+		grid.ppc.o guess4.ppc.o inertia4.ppc.o keen6.ppc.o \
+		latin.ppc.o laydomino.ppc.o lightup6.ppc.o list.ppc.o \
+		loopgen.ppc.o loopy6.ppc.o magnets6.ppc.o malloc.ppc.o \
+		map6.ppc.o maxflow.ppc.o midend.ppc.o mines6.ppc.o \
+		misc.ppc.o net4.ppc.o netslid4.ppc.o osx.ppc.o \
+		pattern6.ppc.o pearl6.ppc.o pegs4.ppc.o penrose.ppc.o \
+		random.ppc.o range4.ppc.o rect4.ppc.o samegam4.ppc.o \
+		signpos6.ppc.o singles6.ppc.o sixteen4.ppc.o slant6.ppc.o \
+		solo6.ppc.o tdq.ppc.o tents6.ppc.o towers6.ppc.o \
+		tree234.ppc.o twiddle4.ppc.o unequal6.ppc.o untangl4.ppc.o \
 		version.ppc.o 
 
-Puzzles.i386.bin: blackbo3.i386.o bridges3.i386.o combi.i386.o cube3.i386.o \
-		divvy.i386.o dominos3.i386.o drawing.i386.o dsf.i386.o \
-		fifteen3.i386.o filling5.i386.o flip3.i386.o galaxie7.i386.o \
-		grid.i386.o guess3.i386.o inertia3.i386.o keen5.i386.o \
-		latin.i386.o laydomino.i386.o lightup5.i386.o list.i386.o \
-		loopgen.i386.o loopy5.i386.o magnets5.i386.o malloc.i386.o \
-		map5.i386.o maxflow.i386.o midend.i386.o mines5.i386.o \
-		misc.i386.o net3.i386.o netslid3.i386.o osx.i386.o \
-		pattern5.i386.o pearl5.i386.o pegs3.i386.o penrose.i386.o \
-		random.i386.o range3.i386.o rect3.i386.o samegam3.i386.o \
-		signpos5.i386.o singles5.i386.o sixteen3.i386.o \
-		slant5.i386.o solo5.i386.o tdq.i386.o tents5.i386.o \
-		towers5.i386.o tree234.i386.o twiddle3.i386.o \
-		unequal5.i386.o untangl3.i386.o version.i386.o
+Puzzles.i386.bin: blackbo4.i386.o bridges4.i386.o combi.i386.o cube4.i386.o \
+		divvy.i386.o dominos4.i386.o drawing.i386.o dsf.i386.o \
+		fifteen4.i386.o filling6.i386.o flip4.i386.o galaxie8.i386.o \
+		grid.i386.o guess4.i386.o inertia4.i386.o keen6.i386.o \
+		latin.i386.o laydomino.i386.o lightup6.i386.o list.i386.o \
+		loopgen.i386.o loopy6.i386.o magnets6.i386.o malloc.i386.o \
+		map6.i386.o maxflow.i386.o midend.i386.o mines6.i386.o \
+		misc.i386.o net4.i386.o netslid4.i386.o osx.i386.o \
+		pattern6.i386.o pearl6.i386.o pegs4.i386.o penrose.i386.o \
+		random.i386.o range4.i386.o rect4.i386.o samegam4.i386.o \
+		signpos6.i386.o singles6.i386.o sixteen4.i386.o \
+		slant6.i386.o solo6.i386.o tdq.i386.o tents6.i386.o \
+		towers6.i386.o tree234.i386.o twiddle4.i386.o \
+		unequal6.i386.o untangl4.i386.o version.i386.o
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(LDFLAGS) -o $@ \
-		blackbo3.i386.o bridges3.i386.o combi.i386.o cube3.i386.o \
-		divvy.i386.o dominos3.i386.o drawing.i386.o dsf.i386.o \
-		fifteen3.i386.o filling5.i386.o flip3.i386.o galaxie7.i386.o \
-		grid.i386.o guess3.i386.o inertia3.i386.o keen5.i386.o \
-		latin.i386.o laydomino.i386.o lightup5.i386.o list.i386.o \
-		loopgen.i386.o loopy5.i386.o magnets5.i386.o malloc.i386.o \
-		map5.i386.o maxflow.i386.o midend.i386.o mines5.i386.o \
-		misc.i386.o net3.i386.o netslid3.i386.o osx.i386.o \
-		pattern5.i386.o pearl5.i386.o pegs3.i386.o penrose.i386.o \
-		random.i386.o range3.i386.o rect3.i386.o samegam3.i386.o \
-		signpos5.i386.o singles5.i386.o sixteen3.i386.o \
-		slant5.i386.o solo5.i386.o tdq.i386.o tents5.i386.o \
-		towers5.i386.o tree234.i386.o twiddle3.i386.o \
-		unequal5.i386.o untangl3.i386.o version.i386.o 
+		blackbo4.i386.o bridges4.i386.o combi.i386.o cube4.i386.o \
+		divvy.i386.o dominos4.i386.o drawing.i386.o dsf.i386.o \
+		fifteen4.i386.o filling6.i386.o flip4.i386.o galaxie8.i386.o \
+		grid.i386.o guess4.i386.o inertia4.i386.o keen6.i386.o \
+		latin.i386.o laydomino.i386.o lightup6.i386.o list.i386.o \
+		loopgen.i386.o loopy6.i386.o magnets6.i386.o malloc.i386.o \
+		map6.i386.o maxflow.i386.o midend.i386.o mines6.i386.o \
+		misc.i386.o net4.i386.o netslid4.i386.o osx.i386.o \
+		pattern6.i386.o pearl6.i386.o pegs4.i386.o penrose.i386.o \
+		random.i386.o range4.i386.o rect4.i386.o samegam4.i386.o \
+		signpos6.i386.o singles6.i386.o sixteen4.i386.o \
+		slant6.i386.o solo6.i386.o tdq.i386.o tents6.i386.o \
+		towers6.i386.o tree234.i386.o twiddle4.i386.o \
+		unequal6.i386.o untangl4.i386.o version.i386.o 
 
 Puzzles.app/Contents/MacOS/Puzzles: Puzzles.app/Contents/MacOS \
 		Puzzles.ppc.bin Puzzles.i386.bin
@@ -452,23 +452,23 @@ unequalsolver: unequalsolver.ppc unequalsolver.i386
 
 blackbox.ppc.o: ./blackbox.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-blackbo3.ppc.o: ./blackbox.c ./puzzles.h
+blackbo4.ppc.o: ./blackbox.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 bridges.ppc.o: ./bridges.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-bridges3.ppc.o: ./bridges.c ./puzzles.h
+bridges4.ppc.o: ./bridges.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 combi.ppc.o: ./combi.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 cube.ppc.o: ./cube.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-cube3.ppc.o: ./cube.c ./puzzles.h
+cube4.ppc.o: ./cube.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 divvy.ppc.o: ./divvy.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 dominosa.ppc.o: ./dominosa.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-dominos3.ppc.o: ./dominosa.c ./puzzles.h
+dominos4.ppc.o: ./dominosa.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 drawing.ppc.o: ./drawing.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -476,21 +476,21 @@ dsf.ppc.o: ./dsf.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 fifteen.ppc.o: ./fifteen.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-fifteen3.ppc.o: ./fifteen.c ./puzzles.h
+fifteen4.ppc.o: ./fifteen.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 filling.ppc.o: ./filling.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-filling5.ppc.o: ./filling.c ./puzzles.h
+filling6.ppc.o: ./filling.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 filling2.ppc.o: ./filling.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 flip.ppc.o: ./flip.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-flip3.ppc.o: ./flip.c ./puzzles.h ./tree234.h
+flip4.ppc.o: ./flip.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 galaxies.ppc.o: ./galaxies.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-galaxie7.ppc.o: ./galaxies.c ./puzzles.h
+galaxie8.ppc.o: ./galaxies.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 galaxie4.ppc.o: ./galaxies.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_PICTURE_GENERATOR -c $< -o $@
@@ -502,15 +502,15 @@ gtk.ppc.o: ./gtk.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 guess.ppc.o: ./guess.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-guess3.ppc.o: ./guess.c ./puzzles.h
+guess4.ppc.o: ./guess.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 inertia.ppc.o: ./inertia.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-inertia3.ppc.o: ./inertia.c ./puzzles.h
+inertia4.ppc.o: ./inertia.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 keen.ppc.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-keen5.ppc.o: ./keen.c ./puzzles.h ./latin.h
+keen6.ppc.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 keen2.ppc.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -524,7 +524,7 @@ laydomino.ppc.o: ./laydomino.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 lightup.ppc.o: ./lightup.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-lightup5.ppc.o: ./lightup.c ./puzzles.h
+lightup6.ppc.o: ./lightup.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 lightup2.ppc.o: ./lightup.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -534,13 +534,13 @@ loopgen.ppc.o: ./loopgen.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 loopy.ppc.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-loopy5.ppc.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
+loopy6.ppc.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 loopy2.ppc.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 magnets.ppc.o: ./magnets.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-magnets5.ppc.o: ./magnets.c ./puzzles.h
+magnets6.ppc.o: ./magnets.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 magnets2.ppc.o: ./magnets.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -548,7 +548,7 @@ malloc.ppc.o: ./malloc.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 map.ppc.o: ./map.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-map5.ppc.o: ./map.c ./puzzles.h
+map6.ppc.o: ./map.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 map2.ppc.o: ./map.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -558,7 +558,7 @@ midend.ppc.o: ./midend.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 mines.ppc.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-mines5.ppc.o: ./mines.c ./tree234.h ./puzzles.h
+mines6.ppc.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 mines2.ppc.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_OBFUSCATOR -c $< -o $@
@@ -566,11 +566,11 @@ misc.ppc.o: ./misc.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 net.ppc.o: ./net.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-net3.ppc.o: ./net.c ./puzzles.h ./tree234.h
+net4.ppc.o: ./net.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 netslide.ppc.o: ./netslide.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-netslid3.ppc.o: ./netslide.c ./puzzles.h ./tree234.h
+netslid4.ppc.o: ./netslide.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 no-icon.ppc.o: ./no-icon.c
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -584,19 +584,19 @@ osx.ppc.o: ./osx.m ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 -x objective-c $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 pattern.ppc.o: ./pattern.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pattern5.ppc.o: ./pattern.c ./puzzles.h
+pattern6.ppc.o: ./pattern.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 pattern2.ppc.o: ./pattern.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 pearl.ppc.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pearl5.ppc.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
+pearl6.ppc.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 pearl2.ppc.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 pegs.ppc.o: ./pegs.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pegs3.ppc.o: ./pegs.c ./puzzles.h ./tree234.h
+pegs4.ppc.o: ./pegs.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 penrose.ppc.o: ./penrose.c ./puzzles.h ./penrose.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -604,45 +604,47 @@ printing.ppc.o: ./printing.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 ps.ppc.o: ./ps.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
+qt.ppc.o: ./qt.c ./puzzles.h
+	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 random.ppc.o: ./random.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 range.ppc.o: ./range.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-range3.ppc.o: ./range.c ./puzzles.h
+range4.ppc.o: ./range.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 rect.ppc.o: ./rect.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-rect3.ppc.o: ./rect.c ./puzzles.h
+rect4.ppc.o: ./rect.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 samegame.ppc.o: ./samegame.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-samegam3.ppc.o: ./samegame.c ./puzzles.h
+samegam4.ppc.o: ./samegame.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 signpost.ppc.o: ./signpost.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-signpos5.ppc.o: ./signpost.c ./puzzles.h
+signpos6.ppc.o: ./signpost.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 signpos2.ppc.o: ./signpost.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 singles.ppc.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-singles5.ppc.o: ./singles.c ./puzzles.h ./latin.h
+singles6.ppc.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 singles3.ppc.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 sixteen.ppc.o: ./sixteen.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-sixteen3.ppc.o: ./sixteen.c ./puzzles.h
+sixteen4.ppc.o: ./sixteen.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 slant.ppc.o: ./slant.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-slant5.ppc.o: ./slant.c ./puzzles.h
+slant6.ppc.o: ./slant.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 slant2.ppc.o: ./slant.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 solo.ppc.o: ./solo.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-solo5.ppc.o: ./solo.c ./puzzles.h
+solo6.ppc.o: ./solo.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 solo2.ppc.o: ./solo.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -650,13 +652,13 @@ tdq.ppc.o: ./tdq.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 tents.ppc.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-tents5.ppc.o: ./tents.c ./puzzles.h ./maxflow.h
+tents6.ppc.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 tents3.ppc.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 towers.ppc.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-towers5.ppc.o: ./towers.c ./puzzles.h ./latin.h
+towers6.ppc.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 towers2.ppc.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -664,17 +666,17 @@ tree234.ppc.o: ./tree234.c ./tree234.h ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 twiddle.ppc.o: ./twiddle.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-twiddle3.ppc.o: ./twiddle.c ./puzzles.h
+twiddle4.ppc.o: ./twiddle.c ./puzzles.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 unequal.ppc.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-unequal5.ppc.o: ./unequal.c ./puzzles.h ./latin.h
+unequal6.ppc.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 unequal2.ppc.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 untangle.ppc.o: ./untangle.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-untangl3.ppc.o: ./untangle.c ./puzzles.h ./tree234.h
+untangl4.ppc.o: ./untangle.c ./puzzles.h ./tree234.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 windows.ppc.o: ./windows.c ./puzzles.h ./resource.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -682,23 +684,23 @@ windows1.ppc.o: ./windows.c ./puzzles.h ./resource.h
 	$(CC) -arch ppc -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 blackbox.i386.o: ./blackbox.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-blackbo3.i386.o: ./blackbox.c ./puzzles.h
+blackbo4.i386.o: ./blackbox.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 bridges.i386.o: ./bridges.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-bridges3.i386.o: ./bridges.c ./puzzles.h
+bridges4.i386.o: ./bridges.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 combi.i386.o: ./combi.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 cube.i386.o: ./cube.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-cube3.i386.o: ./cube.c ./puzzles.h
+cube4.i386.o: ./cube.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 divvy.i386.o: ./divvy.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 dominosa.i386.o: ./dominosa.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-dominos3.i386.o: ./dominosa.c ./puzzles.h
+dominos4.i386.o: ./dominosa.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 drawing.i386.o: ./drawing.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -706,21 +708,21 @@ dsf.i386.o: ./dsf.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 fifteen.i386.o: ./fifteen.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-fifteen3.i386.o: ./fifteen.c ./puzzles.h
+fifteen4.i386.o: ./fifteen.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 filling.i386.o: ./filling.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-filling5.i386.o: ./filling.c ./puzzles.h
+filling6.i386.o: ./filling.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 filling2.i386.o: ./filling.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 flip.i386.o: ./flip.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-flip3.i386.o: ./flip.c ./puzzles.h ./tree234.h
+flip4.i386.o: ./flip.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 galaxies.i386.o: ./galaxies.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-galaxie7.i386.o: ./galaxies.c ./puzzles.h
+galaxie8.i386.o: ./galaxies.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 galaxie4.i386.o: ./galaxies.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_PICTURE_GENERATOR -c $< -o $@
@@ -732,15 +734,15 @@ gtk.i386.o: ./gtk.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 guess.i386.o: ./guess.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-guess3.i386.o: ./guess.c ./puzzles.h
+guess4.i386.o: ./guess.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 inertia.i386.o: ./inertia.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-inertia3.i386.o: ./inertia.c ./puzzles.h
+inertia4.i386.o: ./inertia.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 keen.i386.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-keen5.i386.o: ./keen.c ./puzzles.h ./latin.h
+keen6.i386.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 keen2.i386.o: ./keen.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -754,7 +756,7 @@ laydomino.i386.o: ./laydomino.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 lightup.i386.o: ./lightup.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-lightup5.i386.o: ./lightup.c ./puzzles.h
+lightup6.i386.o: ./lightup.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 lightup2.i386.o: ./lightup.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -764,13 +766,13 @@ loopgen.i386.o: ./loopgen.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 loopy.i386.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-loopy5.i386.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
+loopy6.i386.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 loopy2.i386.o: ./loopy.c ./puzzles.h ./tree234.h ./grid.h ./loopgen.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 magnets.i386.o: ./magnets.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-magnets5.i386.o: ./magnets.c ./puzzles.h
+magnets6.i386.o: ./magnets.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 magnets2.i386.o: ./magnets.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -778,7 +780,7 @@ malloc.i386.o: ./malloc.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 map.i386.o: ./map.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-map5.i386.o: ./map.c ./puzzles.h
+map6.i386.o: ./map.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 map2.i386.o: ./map.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -788,7 +790,7 @@ midend.i386.o: ./midend.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 mines.i386.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-mines5.i386.o: ./mines.c ./tree234.h ./puzzles.h
+mines6.i386.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 mines2.i386.o: ./mines.c ./tree234.h ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_OBFUSCATOR -c $< -o $@
@@ -796,11 +798,11 @@ misc.i386.o: ./misc.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 net.i386.o: ./net.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-net3.i386.o: ./net.c ./puzzles.h ./tree234.h
+net4.i386.o: ./net.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 netslide.i386.o: ./netslide.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-netslid3.i386.o: ./netslide.c ./puzzles.h ./tree234.h
+netslid4.i386.o: ./netslide.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 no-icon.i386.o: ./no-icon.c
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -814,19 +816,19 @@ osx.i386.o: ./osx.m ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 -x objective-c $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 pattern.i386.o: ./pattern.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pattern5.i386.o: ./pattern.c ./puzzles.h
+pattern6.i386.o: ./pattern.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 pattern2.i386.o: ./pattern.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 pearl.i386.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pearl5.i386.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
+pearl6.i386.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 pearl2.i386.o: ./pearl.c ./puzzles.h ./grid.h ./loopgen.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 pegs.i386.o: ./pegs.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-pegs3.i386.o: ./pegs.c ./puzzles.h ./tree234.h
+pegs4.i386.o: ./pegs.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 penrose.i386.o: ./penrose.c ./puzzles.h ./penrose.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
@@ -834,45 +836,47 @@ printing.i386.o: ./printing.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 ps.i386.o: ./ps.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
+qt.i386.o: ./qt.c ./puzzles.h
+	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 random.i386.o: ./random.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 range.i386.o: ./range.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-range3.i386.o: ./range.c ./puzzles.h
+range4.i386.o: ./range.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 rect.i386.o: ./rect.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-rect3.i386.o: ./rect.c ./puzzles.h
+rect4.i386.o: ./rect.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 samegame.i386.o: ./samegame.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-samegam3.i386.o: ./samegame.c ./puzzles.h
+samegam4.i386.o: ./samegame.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 signpost.i386.o: ./signpost.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-signpos5.i386.o: ./signpost.c ./puzzles.h
+signpos6.i386.o: ./signpost.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 signpos2.i386.o: ./signpost.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 singles.i386.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-singles5.i386.o: ./singles.c ./puzzles.h ./latin.h
+singles6.i386.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 singles3.i386.o: ./singles.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 sixteen.i386.o: ./sixteen.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-sixteen3.i386.o: ./sixteen.c ./puzzles.h
+sixteen4.i386.o: ./sixteen.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 slant.i386.o: ./slant.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-slant5.i386.o: ./slant.c ./puzzles.h
+slant6.i386.o: ./slant.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 slant2.i386.o: ./slant.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 solo.i386.o: ./solo.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-solo5.i386.o: ./solo.c ./puzzles.h
+solo6.i386.o: ./solo.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 solo2.i386.o: ./solo.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -880,13 +884,13 @@ tdq.i386.o: ./tdq.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 tents.i386.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-tents5.i386.o: ./tents.c ./puzzles.h ./maxflow.h
+tents6.i386.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 tents3.i386.o: ./tents.c ./puzzles.h ./maxflow.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 towers.i386.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-towers5.i386.o: ./towers.c ./puzzles.h ./latin.h
+towers6.i386.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 towers2.i386.o: ./towers.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
@@ -894,17 +898,17 @@ tree234.i386.o: ./tree234.c ./tree234.h ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
 twiddle.i386.o: ./twiddle.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-twiddle3.i386.o: ./twiddle.c ./puzzles.h
+twiddle4.i386.o: ./twiddle.c ./puzzles.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 unequal.i386.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-unequal5.i386.o: ./unequal.c ./puzzles.h ./latin.h
+unequal6.i386.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 unequal2.i386.o: ./unequal.c ./puzzles.h ./latin.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DSTANDALONE_SOLVER -c $< -o $@
 untangle.i386.o: ./untangle.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
-untangl3.i386.o: ./untangle.c ./puzzles.h ./tree234.h
+untangl4.i386.o: ./untangle.c ./puzzles.h ./tree234.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -DCOMBINED -c $< -o $@
 windows.i386.o: ./windows.c ./puzzles.h ./resource.h
 	$(CC) -arch i386 -mmacosx-version-min=10.3 $(COMPAT) $(FWHACK) $(CFLAGS) $(XFLAGS) -c $< -o $@
