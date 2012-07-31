@@ -41,6 +41,9 @@ desktop [
     path=/apps/Games
 ]
 
+FORMS=\
+    qt.ui
+
 SOURCES=\
     blackbox.c\
     bridges.c\

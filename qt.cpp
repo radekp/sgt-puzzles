@@ -1,3 +1,22 @@
+
+#include "qt.h"
+#include <qtopiaapplication.h>
+
+#include <QStatusBar>
+
+MainWindow::MainWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
+{
+    // init
+    setupUi(this);
+}
+
+MainWindow::~MainWindow() {
+    //
+}
+
+QTOPIA_ADD_APPLICATION(QTOPIA_TARGET, MainWindow)
+QTOPIA_MAIN
+
 /*
   Qt port...
 
@@ -82,6 +101,8 @@
     - accelgroup (drop for phone?)
     
 */
+
+#if 0
 
 /*
  * gtk.c: GTK front end for my puzzle collection.
@@ -2882,3 +2903,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+#endif
