@@ -38,6 +38,7 @@ private:
   const struct game *thegame;
   struct frontend *fe;
   struct midend *me;
+  QActionGroup *choose_game;
   QActionGroup *game_presets;
   int ncolours;
   float *colours;
@@ -50,6 +51,7 @@ private:
   QTimer *timer;
   struct timeval last_time;
 
+  void switch_game();
   void new_game();
 
 protected:
@@ -60,6 +62,7 @@ protected:
   void game_type_preset(QAction *action);
   void game_solve();
   void game_key();
+  void choose_game_type(QAction *action);
 
 };
 

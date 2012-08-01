@@ -35,7 +35,7 @@ extern "C" {
   };
 
   struct blitter {
-    QPixmap pixmap;
+    QPixmap *pixmap;
     int w, h, x, y;
   };
 
@@ -134,11 +134,13 @@ extern "C" {
     blitter *bl = snew(blitter);
     bl->w = w;
     bl->h = h;
+    bl->pixmap = new QPixmap();
     return bl;
   }
 
   void qt_blitter_free(void *handle, blitter *bl)
   {
+    delete bl->pixmap;
     sfree(bl);
   }
 
@@ -250,113 +252,88 @@ void QtCanvas::mouseMoveEvent(QMouseEvent *ev)
 
 PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
 {
-    setupUi(this);
+  setupUi(this);
 
-    // Data initialisations.
-    timer = NULL;
-    me = NULL;
-    game_presets = NULL;
-    clip_x = -1;
+  // Data initialisations.
+  timer = NULL;
+  me = NULL;
+  choose_game = NULL;
+  game_presets = NULL;
+  clip_x = -1;
 
-    // Allocate the frontend structure that the rest of sgt-puzzles
-    // understands, and link it to this main window.
-    fe = snew(frontend);
-    fe->window = this;
+  // Allocate the frontend structure that the rest of sgt-puzzles
+  // understands, and link it to this main window.
+  fe = snew(frontend);
+  fe->window = this;
 
-    // Connect menu items to the code that they should invoke.
-    connect(actionRestart, SIGNAL(triggered()), this, SLOT(game_restart()));
-    //@@@ skip Specific... for now
-    //@@@ skip Random Seed... for now
-    //@@@ skip Custom for now
-    //@@@ skip Load
-    //@@@ skip Save
-    //@@@ skip Copy
-    //@@@ skip Help for now
-    connect(actionSolve, SIGNAL(triggered()), this, SLOT(game_solve()));
-    connect(actionNew, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actionExit, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontbUndo, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontbRedo, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb0, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb1, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb2, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb3, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb4, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb5, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb6, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb7, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb8, SIGNAL(triggered()), this, SLOT(game_key()));
-    connect(actiontb9, SIGNAL(triggered()), this, SLOT(game_key()));
+  // Connect menu items to the code that they should invoke.
+  connect(actionRestart, SIGNAL(triggered()), this, SLOT(game_restart()));
+  //@@@ skip Specific... for now
+  //@@@ skip Random Seed... for now
+  //@@@ skip Custom for now
+  //@@@ skip Load
+  //@@@ skip Save
+  //@@@ skip Copy
+  //@@@ skip Help for now
+  connect(actionSolve, SIGNAL(triggered()), this, SLOT(game_solve()));
+  connect(actionNew, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actionExit, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontbUndo, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontbRedo, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb0, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb1, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb2, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb3, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb4, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb5, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb6, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb7, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb8, SIGNAL(triggered()), this, SLOT(game_key()));
+  connect(actiontb9, SIGNAL(triggered()), this, SLOT(game_key()));
 
-    actionNew->setData('n');
-    actionExit->setData('q');
-    actiontbUndo->setData('u');
-    actiontbRedo->setData('r');
-    actiontb0->setData('0');
-    actiontb1->setData('1');
-    actiontb2->setData('2');
-    actiontb3->setData('3');
-    actiontb4->setData('4');
-    actiontb5->setData('5');
-    actiontb6->setData('6');
-    actiontb7->setData('7');
-    actiontb8->setData('8');
-    actiontb9->setData('9');
+  actionNew->setData('n');
+  actionExit->setData('q');
+  actiontbUndo->setData('u');
+  actiontbRedo->setData('r');
+  actiontb0->setData('0');
+  actiontb1->setData('1');
+  actiontb2->setData('2');
+  actiontb3->setData('3');
+  actiontb4->setData('4');
+  actiontb5->setData('5');
+  actiontb6->setData('6');
+  actiontb7->setData('7');
+  actiontb8->setData('8');
+  actiontb9->setData('9');
 
-    // Connect the canvas widget, which is what directly processes
-    // mouse events, back to this main window.
-    canvas->puzz_win = this;
+  // Connect the canvas widget, which is what directly processes mouse
+  // events, back to this main window.
+  canvas->puzz_win = this;
 
-    // Choose the default game.  For now that'll be the first in the
-    // list; in future we should save and restore the last game that
-    // the user switched to.
-    thegame = gamelist[12];
+  // Choose the default game.  For now that'll be the first in the
+  // list; in future we should save and restore the last game that the
+  // user switched to.
+  thegame = gamelist[12];
 
-    actionSolve->setEnabled(thegame->can_solve);
-    actiontb0->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb1->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb2->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb3->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb4->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb5->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb6->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb7->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb8->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-    actiontb9->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  // Create Choose Game menu.
+  menuChoose_Game->clear();
+  if (choose_game) {
+    delete choose_game;
+    choose_game = NULL;
+  }
+  choose_game = new QActionGroup(this);
+  int i;
+  for (i = 0; i < gamecount; i++) {
+    QAction *act = choose_game->addAction(gamelist[i]->name);
+    act->setCheckable(true);
+    act->setData(i);
+    act->setChecked(gamelist[i] == thegame);
+  }
+  menuChoose_Game->addActions(choose_game->actions());
+  connect(choose_game, SIGNAL(triggered(QAction *)), this, SLOT(choose_game_type(QAction *)));
 
-    // Create midend for the default game.
-    me = midend_new(fe, thegame, &qt_drawing, fe, 1);
-
-    // Create Type menu items according to the presets of the current
-    // game.
-    menuType->clear();
-    if (game_presets) {
-      delete game_presets;
-      game_presets = NULL;
-    }
-    game_presets = new QActionGroup(this);
-    int n = midend_num_presets(me), i;
-    int curr = midend_which_preset(me);
-    for (i = 0; i < n; i++) {
-      char *name;
-      game_params *params;
-
-      midend_fetch_preset(me, i, &name, &params);
-
-      QAction *act = game_presets->addAction(name);
-      act->setCheckable(true);
-      act->setData(i);
-
-      act->setChecked(i == curr);
-    }
-    menuType->addActions(game_presets->actions());
-    connect(game_presets, SIGNAL(triggered(QAction *)), this, SLOT(game_type_preset(QAction *)));
-
-    // Get the colours that the midend will need.
-    colours = midend_colours(me, &ncolours);
-
-    // Start a new game.
-    new_game();
+  // Switch to the default game.
+  switch_game();
 }
 
 PuzzleWindow::~PuzzleWindow()
@@ -418,11 +395,10 @@ void PuzzleWindow::game_restart() {
 }
 
 void PuzzleWindow::game_type_preset(QAction *action) {
-  int i = action->data().toInt();
   char *name;
   game_params *params;
   
-  midend_fetch_preset(me, i, &name, &params);
+  midend_fetch_preset(me, action->data().toInt(), &name, &params);
   midend_set_params(me, params);
 
   // Start a new game.
@@ -525,7 +501,7 @@ void PuzzleWindow::draw_circle(int cx, int cy, int radius,
   p.setPen(get_colour(outline));
   QBrush brush(get_colour(fill));
   p.setBrush(brush);
-  p.drawEllipse(cx, cy, radius, radius);
+  p.drawEllipse(cx - radius, cy - radius, 2 * radius, 2 * radius);
 }
 
 void PuzzleWindow::clip(int x, int y, int w, int h)
@@ -553,7 +529,7 @@ void PuzzleWindow::status_bar(char *text)
 
 void PuzzleWindow::blitter_save(struct blitter *bl, int x, int y)
 {
-  bl->pixmap = pixmap->copy(x, y, bl->w, bl->h);    
+  *bl->pixmap = pixmap->copy(x, y, bl->w, bl->h);    
 }
 
 void PuzzleWindow::blitter_load(struct blitter *bl, int x, int y)
@@ -563,7 +539,7 @@ void PuzzleWindow::blitter_load(struct blitter *bl, int x, int y)
     p.setClipRect(clip_x, clip_y, clip_w, clip_h);
     p.setClipping(TRUE);
   }
-  p.drawPixmap(x, y, bl->pixmap);
+  p.drawPixmap(x, y, *bl->pixmap);
 }
 
 void PuzzleWindow::draw_thick_line(float thickness,
@@ -588,6 +564,67 @@ void PuzzleWindow::default_colour(float *output)
   output[0] = base_colour.redF();
   output[1] = base_colour.greenF();
   output[2] = base_colour.blueF();
+}
+
+void PuzzleWindow::choose_game_type(QAction *action)
+{
+  // Switch to new game.
+  thegame = gamelist[action->data().toInt()];
+  switch_game();
+}
+
+void PuzzleWindow::switch_game()
+{
+  // Set up stuff that depends on the chosen game.
+  actionSolve->setEnabled(thegame->can_solve);
+  actiontb0->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb1->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb2->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb3->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb4->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb5->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb6->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb7->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb8->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  actiontb9->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+
+  // Clean up any old midend.
+  if (me)
+    midend_free(me);
+
+  // Create midend for the default game.
+  me = midend_new(fe, thegame, &qt_drawing, fe, 1);
+
+  // Create Type menu items according to the presets of the current
+  // game.
+  menuType->clear();
+  if (game_presets) {
+    delete game_presets;
+    game_presets = NULL;
+  }
+  game_presets = new QActionGroup(this);
+  int n = midend_num_presets(me), i;
+  int curr = midend_which_preset(me);
+  for (i = 0; i < n; i++) {
+    char *name;
+    game_params *params;
+
+    midend_fetch_preset(me, i, &name, &params);
+
+    QAction *act = game_presets->addAction(name);
+    act->setCheckable(true);
+    act->setData(i);
+
+    act->setChecked(i == curr);
+  }
+  menuType->addActions(game_presets->actions());
+  connect(game_presets, SIGNAL(triggered(QAction *)), this, SLOT(game_type_preset(QAction *)));
+
+  // Get the colours that the midend will need.
+  colours = midend_colours(me, &ncolours);
+
+  // Start a new game.
+  new_game();
 }
 
 #ifdef QTOPIA
