@@ -2,16 +2,230 @@
 #include "qt.h"
 #include <qtopiaapplication.h>
 
-#include <QStatusBar>
+extern "C" {
+
+  struct frontend {
+    MainWindow *window;
+  };
+
+  void activate_timer(frontend *fe)
+  {
+    fe->window->activate_timer();
+  }
+
+  void deactivate_timer(frontend *fe)
+  {
+    fe->window->deactivate_timer();
+  }
+
+}
 
 MainWindow::MainWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
 {
-    // init
     setupUi(this);
+
+    // Data initialisations.
+    timer = NULL;
+    me = NULL;
+    game_presets = NULL;
+
+    // Allocate the frontend structure that the rest of sgt-puzzles
+    // understands, and link it to this main window.
+    fe = snew(frontend);
+    fe->window = this;
+
+    // Choose the default game.  For now that'll be Loopy, as that's
+    // my favourite; in future we should save and restore the last
+    // game that the user switched to.
+    thegame = &loopy;
+
+    // Create midend for the default game.
+    me = midend_new(fe, thegame, &qt_drawing, fe, 1);
+
+    // Start a new game.
+    midend_new_game(me);
+
+    // Connect menu items to the code that they should invoke.
+    connect(actionRestart, SIGNAL(triggered()), this, SLOT(game_restart()));
+    //@@@ skip Specific... for now
+    //@@@ skip Random Seed... for now
+
+    // Create Type menu items according to the presets of the current
+    // game.
+    menuType->clear();
+    if (game_presets) {
+      delete game_presets;
+      game_presets = NULL;
+    }
+    game_presets = new QActionGroup(this);
+    int n = midend_num_presets(me), i;
+    int curr = midend_which_preset(me);
+    for (i = 0; i < n; i++) {
+      char *name;
+      game_params *params;
+
+      midend_fetch_preset(me, i, &name, &params);
+
+      QAction *act = game_presets->addAction(name);
+      act->setCheckable(true);
+      act->setData(params);
+
+      act->setChecked(i == curr);
+    }
+    menuType->addActions(game_presets->actions());
+    connect(game_presets, SIGNAL(triggered()), this, SLOT(game_type_preset()));
+
+    //@@@ skip Custom for now
+    //@@@ skip Load
+    //@@@ skip Save
+    //@@@ skip Copy
+    //@@@ skip Help for now
+
+    actionSolve->setEnabled(thegame->can_solve);
+    connect(actionSolve, SIGNAL(triggered()), this, SLOT(game_solve()));
+    connect(actionNew, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actionExit, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontbUndo, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontbRedo, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb0, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb1, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb2, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb3, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb4, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb5, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb6, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb7, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb8, SIGNAL(triggered()), this, SLOT(game_key()));
+    connect(actiontb9, SIGNAL(triggered()), this, SLOT(game_key()));
+
+    actiontb0->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb1->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb2->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb3->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb4->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb5->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb6->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb7->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb8->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+    actiontb9->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+
+    actionNew->setData('n');
+    actionExit->setData('q');
+    actiontbUndo->setData('u');
+    actiontbRedo->setData('r');
+    actiontb0->setData('0');
+    actiontb1->setData('1');
+    actiontb2->setData('2');
+    actiontb3->setData('3');
+    actiontb4->setData('4');
+    actiontb5->setData('5');
+    actiontb6->setData('6');
+    actiontb7->setData('7');
+    actiontb8->setData('8');
+    actiontb9->setData('9');
+
+    // Get the colours that the midend will need.
+    colours = midend_colours(fe->me, &ncolours);
+
+    // Tell the midend to figure out the size it needs for the current
+    // game, limited to the size of the QGraphicsView, and store the
+    // results in w and h.
+    w = graphicsView->width();
+    h = graphicsView->height();
+    midend_size(me, &w, &h, FALSE);
+
+    gtk_signal_connect(GTK_OBJECT(fe->area), "button_press_event",
+		       GTK_SIGNAL_FUNC(button_event), fe);
+    gtk_signal_connect(GTK_OBJECT(fe->area), "button_release_event",
+		       GTK_SIGNAL_FUNC(button_event), fe);
+    gtk_signal_connect(GTK_OBJECT(fe->area), "motion_notify_event",
+		       GTK_SIGNAL_FUNC(motion_event), fe);
+    gtk_signal_connect(GTK_OBJECT(fe->area), "expose_event",
+		       GTK_SIGNAL_FUNC(expose_area), fe);
+    gtk_signal_connect(GTK_OBJECT(fe->window), "map_event",
+		       GTK_SIGNAL_FUNC(map_window), fe);
+    gtk_signal_connect(GTK_OBJECT(fe->area), "configure_event",
+		       GTK_SIGNAL_FUNC(configure_area), fe);
+
+    gtk_widget_add_events(GTK_WIDGET(fe->area),
+                          GDK_BUTTON_PRESS_MASK |
+                          GDK_BUTTON_RELEASE_MASK |
+			  GDK_BUTTON_MOTION_MASK |
+			  GDK_POINTER_MOTION_HINT_MASK);
+
+    if (n_xpm_icons) {
+	gtk_widget_realize(fe->window);
+	iconpm = gdk_pixmap_create_from_xpm_d(fe->window->window, NULL,
+					      NULL, (gchar **)xpm_icons[0]);
+	gdk_window_set_icon(fe->window->window, NULL, iconpm, NULL);
+	iconlist = NULL;
+	for (n = 0; n < n_xpm_icons; n++) {
+	    iconlist =
+		g_list_append(iconlist,
+			      gdk_pixbuf_new_from_xpm_data((const gchar **)
+							   xpm_icons[n]));
+	}
+	gdk_window_set_icon_list(fe->window->window, iconlist);
+    }
+
+    set_window_background(fe, 0);
+
 }
 
 MainWindow::~MainWindow() {
     //
+}
+
+void MainWindow::activate_timer()
+{
+  if (!timer) {
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(timer()));
+    timer->start(20);
+    gettimeofday(&last_time, NULL);
+  }
+}
+
+void MainWindow::timer() {
+  if (timer) {
+    struct timeval now;
+    float elapsed;
+    gettimeofday(&now, NULL);
+    elapsed = ((now.tv_usec - last_time.tv_usec) * 0.000001F +
+	       (now.tv_sec - last_time.tv_sec));
+    midend_timer(me, elapsed);
+    last_time = now;
+  }
+}
+
+void MainWindow::deactivate_timer()
+{
+  if (timer) {
+    delete timer;
+    timer = NULL;
+  }
+}
+
+void MainWindow::game_restart() {
+  midend_restart_game(me);
+}
+
+void MainWindow::game_type_preset() {
+  game_params *params = game_presets->checkedAction()->data();
+  midend_set_params(me, params);
+  midend_new_game(me);
+}
+
+void MainWindow::game_solve() {
+  char *msg = midend_solve(me);
+  if (msg)
+    error_box(this, msg);
+}
+
+void MainWindow::game_key() {
+  QAction *source = (QAction *)sender();
+  if (!midend_process_key(me, 0, 0, source->data()))
+    close();
 }
 
 QTOPIA_ADD_APPLICATION(QTOPIA_TARGET, MainWindow)
@@ -101,6 +315,18 @@ QTOPIA_MAIN
     - accelgroup (drop for phone?)
     
 */
+
+extern "C" {
+
+void frontend_default_colour(frontend *fe, float *output)
+{
+    GdkColor col = fe->window->style->bg[GTK_STATE_NORMAL];
+    output[0] = col.red / 65535.0;
+    output[1] = col.green / 65535.0;
+    output[2] = col.blue / 65535.0;
+}
+
+}
 
 #if 0
 
@@ -211,57 +437,6 @@ struct font {
     int size;
 };
 
-/*
- * This structure holds all the data relevant to a single window.
- * In principle this would allow us to open multiple independent
- * puzzle windows, although I can't currently see any real point in
- * doing so. I'm just coding cleanly because there's no
- * particularly good reason not to.
- */
-struct frontend {
-    GtkWidget *window;
-    GtkAccelGroup *accelgroup;
-    GtkWidget *area;
-    GtkWidget *statusbar;
-    guint statusctx;
-    int w, h;
-    midend *me;
-#ifdef USE_CAIRO
-    const float *colours;
-    cairo_t *cr;
-    cairo_surface_t *image;
-    GdkPixmap *pixmap;
-    GdkColor background;	       /* for painting outside puzzle area */
-#else
-    GdkPixmap *pixmap;
-    GdkGC *gc;
-    GdkColor *colours;
-    GdkColormap *colmap;
-    int backgroundindex;	       /* which of colours[] is background */
-#endif
-    int ncolours;
-    int bbox_l, bbox_r, bbox_u, bbox_d;
-    int timer_active, timer_id;
-    struct timeval last_time;
-    struct font *fonts;
-    int nfonts, fontsize;
-    config_item *cfg;
-    int cfg_which, cfgret;
-    GtkWidget *cfgbox;
-    void *paste_data;
-    int paste_data_len;
-    int pw, ph;                        /* pixmap size (w, h are area size) */
-    int ox, oy;                        /* offset of pixmap in drawing area */
-#ifdef OLD_FILESEL
-    char *filesel_name;
-#endif
-    GSList *preset_radio;
-    int n_preset_menu_items;
-    int preset_threaded;
-    GtkWidget *preset_custom;
-    GtkWidget *copy_menu_item;
-};
-
 struct blitter {
 #ifdef USE_CAIRO
     cairo_surface_t *image;
@@ -277,14 +452,6 @@ void get_random_seed(void **randseed, int *randseedsize)
     gettimeofday(tvp, NULL);
     *randseed = (void *)tvp;
     *randseedsize = sizeof(struct timeval);
-}
-
-void frontend_default_colour(frontend *fe, float *output)
-{
-    GdkColor col = fe->window->style->bg[GTK_STATE_NORMAL];
-    output[0] = col.red / 65535.0;
-    output[1] = col.green / 65535.0;
-    output[2] = col.blue / 65535.0;
 }
 
 void gtk_status_bar(void *handle, char *text)
@@ -1206,37 +1373,6 @@ static gint key_event(GtkWidget *widget, GdkEventKey *event, gpointer data)
     return TRUE;
 }
 
-static gint button_event(GtkWidget *widget, GdkEventButton *event,
-                         gpointer data)
-{
-    frontend *fe = (frontend *)data;
-    int button;
-
-    if (!backing_store_ok(fe))
-        return TRUE;
-
-    if (event->type != GDK_BUTTON_PRESS && event->type != GDK_BUTTON_RELEASE)
-        return TRUE;
-
-    if (event->button == 2 || (event->state & GDK_SHIFT_MASK))
-	button = MIDDLE_BUTTON;
-    else if (event->button == 3 || (event->state & GDK_MOD1_MASK))
-	button = RIGHT_BUTTON;
-    else if (event->button == 1)
-	button = LEFT_BUTTON;
-    else
-	return FALSE;		       /* don't even know what button! */
-
-    if (event->type == GDK_BUTTON_RELEASE)
-        button += LEFT_RELEASE - LEFT_BUTTON;
-
-    if (!midend_process_key(fe->me, event->x - fe->ox,
-                            event->y - fe->oy, button))
-	gtk_widget_destroy(fe->window);
-
-    return TRUE;
-}
-
 static gint motion_event(GtkWidget *widget, GdkEventMotion *event,
                          gpointer data)
 {
@@ -1316,23 +1452,6 @@ static gint configure_area(GtkWidget *widget,
     midend_force_redraw(fe->me);
 
     return TRUE;
-}
-
-static gint timer_func(gpointer data)
-{
-    frontend *fe = (frontend *)data;
-
-    if (fe->timer_active) {
-	struct timeval now;
-	float elapsed;
-	gettimeofday(&now, NULL);
-	elapsed = ((now.tv_usec - fe->last_time.tv_usec) * 0.000001F +
-		   (now.tv_sec - fe->last_time.tv_sec));
-        midend_timer(fe->me, elapsed);	/* may clear timer_active */
-	fe->last_time = now;
-    }
-
-    return fe->timer_active;
 }
 
 void deactivate_timer(frontend *fe)
@@ -1687,15 +1806,6 @@ static int get_config(frontend *fe, int which)
     free_cfg(fe->cfg);
 
     return fe->cfgret;
-}
-
-static void menu_key_event(GtkMenuItem *menuitem, gpointer data)
-{
-    frontend *fe = (frontend *)data;
-    int key = GPOINTER_TO_INT(gtk_object_get_data(GTK_OBJECT(menuitem),
-                                                  "user-data"));
-    if (!midend_process_key(fe->me, 0, 0, key))
-	gtk_widget_destroy(fe->window);
 }
 
 static void get_size(frontend *fe, int *px, int *py)
@@ -2089,45 +2199,15 @@ static void menu_about_event(GtkMenuItem *menuitem, gpointer data)
     char titlebuf[256];
     char textbuf[1024];
 
-    sprintf(titlebuf, "About %.200s", thegame.name);
+    sprintf(titlebuf, "About %.200s", thegame->name);
     sprintf(textbuf,
 	    "%.200s\n\n"
 	    "from Simon Tatham's Portable Puzzle Collection\n\n"
-	    "%.500s", thegame.name, ver);
+	    "%.500s", thegame->name, ver);
 
     message_box(fe->window, titlebuf, textbuf, TRUE, MB_OK);
 }
 
-static GtkWidget *add_menu_item_with_key(frontend *fe, GtkContainer *cont,
-                                         char *text, int key)
-{
-    GtkWidget *menuitem = gtk_menu_item_new_with_label(text);
-    int keyqual;
-    gtk_container_add(cont, menuitem);
-    gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
-                        GINT_TO_POINTER(key));
-    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-		       GTK_SIGNAL_FUNC(menu_key_event), fe);
-    switch (key & ~0x1F) {
-      case 0x00:
-	key += 0x60;
-	keyqual = GDK_CONTROL_MASK;
-	break;
-      case 0x40:
-	key += 0x20;
-	keyqual = GDK_SHIFT_MASK;
-	break;
-      default:
-	keyqual = 0;
-	break;
-    }
-    gtk_widget_add_accelerator(menuitem,
-			       "activate", fe->accelgroup,
-			       key, keyqual,
-			       GTK_ACCEL_VISIBLE);
-    gtk_widget_show(menuitem);
-    return menuitem;
-}
 
 static void add_menu_separator(GtkContainer *cont)
 {
@@ -2138,7 +2218,7 @@ static void add_menu_separator(GtkContainer *cont)
 
 enum { ARG_EITHER, ARG_SAVE, ARG_ID }; /* for argtype */
 
-static frontend *new_window(char *arg, int argtype, char **error)
+static frontend *new_window()
 {
     frontend *fe;
     GtkBox *vbox, *hbox;
@@ -2150,366 +2230,6 @@ static frontend *new_window(char *arg, int argtype, char **error)
     extern char *const *const xpm_icons[];
     extern const int n_xpm_icons;
     const char *dev_flags;
-    int stylus_based;
-
-    fe = snew(frontend);
-
-    fe->timer_active = FALSE;
-    fe->timer_id = -1;
-
-    /*
-     * For the Gtk frontend, allow an environment variable to tell us
-     * if we're running on a 'stylus based' device.
-     */
-    stylus_based = 0;
-    dev_flags = getenv("SGT_PUZZLES_DEVICE_FLAGS");
-    if (dev_flags && strstr(dev_flags, "STYLUS_BASED")) {
-	stylus_based = 1;
-    }
-
-    fe->me = midend_new(fe, &thegame, &gtk_drawing, fe, stylus_based);
-
-    if (arg) {
-	char *err;
-	FILE *fp;
-
-	errbuf[0] = '\0';
-
-	switch (argtype) {
-	  case ARG_ID:
-	    err = midend_game_id(fe->me, arg);
-	    if (!err)
-		midend_new_game(fe->me);
-	    else
-		sprintf(errbuf, "Invalid game ID: %.800s", err);
-	    break;
-	  case ARG_SAVE:
-	    fp = fopen(arg, "r");
-	    if (!fp) {
-		sprintf(errbuf, "Error opening file: %.800s", strerror(errno));
-	    } else {
-		err = midend_deserialise(fe->me, savefile_read, fp);
-                if (err)
-                    sprintf(errbuf, "Invalid save file: %.800s", err);
-                fclose(fp);
-	    }
-	    break;
-	  default /*case ARG_EITHER*/:
-	    /*
-	     * First try treating the argument as a game ID.
-	     */
-	    err = midend_game_id(fe->me, arg);
-	    if (!err) {
-		/*
-		 * It's a valid game ID.
-		 */
-		midend_new_game(fe->me);
-	    } else {
-		FILE *fp = fopen(arg, "r");
-		if (!fp) {
-		    sprintf(errbuf, "Supplied argument is neither a game ID (%.400s)"
-			    " nor a save file (%.400s)", err, strerror(errno));
-		} else {
-		    err = midend_deserialise(fe->me, savefile_read, fp);
-		    if (err)
-			sprintf(errbuf, "%.800s", err);
-		    fclose(fp);
-		}
-	    }
-	    break;
-	}
-	if (*errbuf) {
-	    *error = dupstr(errbuf);
-	    midend_free(fe->me);
-	    sfree(fe);
-	    return NULL;
-	}
-
-    } else {
-	midend_new_game(fe->me);
-    }
-
-    fe->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(fe->window), thegame.name);
-
-    vbox = GTK_BOX(gtk_vbox_new(FALSE, 0));
-    gtk_container_add(GTK_CONTAINER(fe->window), GTK_WIDGET(vbox));
-    gtk_widget_show(GTK_WIDGET(vbox));
-
-    fe->accelgroup = gtk_accel_group_new();
-    gtk_window_add_accel_group(GTK_WINDOW(fe->window), fe->accelgroup);
-
-    hbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
-    gtk_box_pack_start(vbox, GTK_WIDGET(hbox), FALSE, FALSE, 0);
-    gtk_widget_show(GTK_WIDGET(hbox));
-
-    menubar = gtk_menu_bar_new();
-    gtk_box_pack_start(hbox, menubar, TRUE, TRUE, 0);
-    gtk_widget_show(menubar);
-
-    menuitem = gtk_menu_item_new_with_mnemonic("_Game");
-    gtk_container_add(GTK_CONTAINER(menubar), menuitem);
-    gtk_widget_show(menuitem);
-
-    menu = gtk_menu_new();
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem), menu);
-
-    add_menu_item_with_key(fe, GTK_CONTAINER(menu), "New", 'n');
-
-    menuitem = gtk_menu_item_new_with_label("Restart");
-    gtk_container_add(GTK_CONTAINER(menu), menuitem);
-    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-		       GTK_SIGNAL_FUNC(menu_restart_event), fe);
-    gtk_widget_show(menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Specific...");
-    gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
-			GINT_TO_POINTER(CFG_DESC));
-    gtk_container_add(GTK_CONTAINER(menu), menuitem);
-    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-		       GTK_SIGNAL_FUNC(menu_config_event), fe);
-    gtk_widget_show(menuitem);
-
-    menuitem = gtk_menu_item_new_with_label("Random Seed...");
-    gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
-			GINT_TO_POINTER(CFG_SEED));
-    gtk_container_add(GTK_CONTAINER(menu), menuitem);
-    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-		       GTK_SIGNAL_FUNC(menu_config_event), fe);
-    gtk_widget_show(menuitem);
-
-    fe->preset_radio = NULL;
-    fe->preset_custom = NULL;
-    fe->n_preset_menu_items = 0;
-    fe->preset_threaded = FALSE;
-    if ((n = midend_num_presets(fe->me)) > 0 || thegame.can_configure) {
-        GtkWidget *submenu;
-        int i;
-
-        menuitem = gtk_menu_item_new_with_mnemonic("_Type");
-        gtk_container_add(GTK_CONTAINER(menubar), menuitem);
-        gtk_widget_show(menuitem);
-
-        submenu = gtk_menu_new();
-        gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem), submenu);
-
-        for (i = 0; i < n; i++) {
-            char *name;
-            game_params *params;
-
-            midend_fetch_preset(fe->me, i, &name, &params);
-
-	    menuitem =
-		gtk_radio_menu_item_new_with_label(fe->preset_radio, name);
-	    fe->preset_radio =
-		gtk_radio_menu_item_group(GTK_RADIO_MENU_ITEM(menuitem));
-	    fe->n_preset_menu_items++;
-            gtk_container_add(GTK_CONTAINER(submenu), menuitem);
-            gtk_object_set_data(GTK_OBJECT(menuitem), "user-data", params);
-            gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-                               GTK_SIGNAL_FUNC(menu_preset_event), fe);
-            gtk_widget_show(menuitem);
-        }
-
-	if (thegame.can_configure) {
-	    menuitem = fe->preset_custom =
-		gtk_radio_menu_item_new_with_label(fe->preset_radio,
-						   "Custom...");
-	    fe->preset_radio =
-		gtk_radio_menu_item_group(GTK_RADIO_MENU_ITEM(menuitem));
-            gtk_container_add(GTK_CONTAINER(submenu), menuitem);
-            gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
-				GPOINTER_TO_INT(CFG_SETTINGS));
-            gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-                               GTK_SIGNAL_FUNC(menu_config_event), fe);
-            gtk_widget_show(menuitem);
-	}
-
-    }
-
-    add_menu_separator(GTK_CONTAINER(menu));
-    menuitem = gtk_menu_item_new_with_label("Load...");
-    gtk_container_add(GTK_CONTAINER(menu), menuitem);
-    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-		       GTK_SIGNAL_FUNC(menu_load_event), fe);
-    gtk_widget_show(menuitem);
-    menuitem = gtk_menu_item_new_with_label("Save...");
-    gtk_container_add(GTK_CONTAINER(menu), menuitem);
-    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-		       GTK_SIGNAL_FUNC(menu_save_event), fe);
-    gtk_widget_show(menuitem);
-    if (!stylus_based) {
-	add_menu_separator(GTK_CONTAINER(menu));
-	add_menu_item_with_key(fe, GTK_CONTAINER(menu), "Undo", 'u');
-	add_menu_item_with_key(fe, GTK_CONTAINER(menu), "Redo", 'r');
-    }
-    if (thegame.can_format_as_text_ever) {
-	add_menu_separator(GTK_CONTAINER(menu));
-	menuitem = gtk_menu_item_new_with_label("Copy");
-	gtk_container_add(GTK_CONTAINER(menu), menuitem);
-	gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-			   GTK_SIGNAL_FUNC(menu_copy_event), fe);
-	gtk_widget_show(menuitem);
-	fe->copy_menu_item = menuitem;
-    } else {
-	fe->copy_menu_item = NULL;
-    }
-    if (thegame.can_solve) {
-	add_menu_separator(GTK_CONTAINER(menu));
-	menuitem = gtk_menu_item_new_with_label("Solve");
-	gtk_container_add(GTK_CONTAINER(menu), menuitem);
-	gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-			   GTK_SIGNAL_FUNC(menu_solve_event), fe);
-	gtk_widget_show(menuitem);
-    }
-    add_menu_separator(GTK_CONTAINER(menu));
-    add_menu_item_with_key(fe, GTK_CONTAINER(menu), "Exit", 'q');
-
-    menuitem = gtk_menu_item_new_with_mnemonic("_Help");
-    gtk_container_add(GTK_CONTAINER(menubar), menuitem);
-    gtk_widget_show(menuitem);
-
-    menu = gtk_menu_new();
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(menuitem), menu);
-
-    menuitem = gtk_menu_item_new_with_label("About");
-    gtk_container_add(GTK_CONTAINER(menu), menuitem);
-    gtk_signal_connect(GTK_OBJECT(menuitem), "activate",
-		       GTK_SIGNAL_FUNC(menu_about_event), fe);
-    gtk_widget_show(menuitem);
-
-    if (stylus_based) {
-	menuitem=gtk_button_new_with_mnemonic("_Redo");
-	gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
-			    GINT_TO_POINTER((int)('r')));
-	gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
-			   GTK_SIGNAL_FUNC(menu_key_event), fe);
-	gtk_box_pack_end(hbox, menuitem, FALSE, FALSE, 0);
-	gtk_widget_show(menuitem);
-
-	menuitem=gtk_button_new_with_mnemonic("_Undo");
-	gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
-			    GINT_TO_POINTER((int)('u')));
-	gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
-			   GTK_SIGNAL_FUNC(menu_key_event), fe);
-	gtk_box_pack_end(hbox, menuitem, FALSE, FALSE, 0);
-	gtk_widget_show(menuitem);
-
-	if (thegame.flags & REQUIRE_NUMPAD) {
-	    hbox = GTK_BOX(gtk_hbox_new(FALSE, 0));
-	    gtk_box_pack_start(vbox, GTK_WIDGET(hbox), FALSE, FALSE, 0);
-	    gtk_widget_show(GTK_WIDGET(hbox));
-
-	    errbuf[1]='\0';
-	    for(errbuf[0]='0';errbuf[0]<='9';errbuf[0]++) {
-		menuitem=gtk_button_new_with_label(errbuf);
-		gtk_object_set_data(GTK_OBJECT(menuitem), "user-data",
-				    GINT_TO_POINTER((int)(errbuf[0])));
-		gtk_signal_connect(GTK_OBJECT(menuitem), "clicked",
-				   GTK_SIGNAL_FUNC(menu_key_event), fe);
-		gtk_box_pack_start(hbox, menuitem, TRUE, TRUE, 0);
-		gtk_widget_show(menuitem);
-	    }
-	}
-    }
-
-    changed_preset(fe);
-
-    snaffle_colours(fe);
-
-    if (midend_wants_statusbar(fe->me)) {
-	GtkWidget *viewport;
-	GtkRequisition req;
-
-	viewport = gtk_viewport_new(NULL, NULL);
-	gtk_viewport_set_shadow_type(GTK_VIEWPORT(viewport), GTK_SHADOW_NONE);
-	fe->statusbar = gtk_statusbar_new();
-	gtk_container_add(GTK_CONTAINER(viewport), fe->statusbar);
-	gtk_widget_show(viewport);
-	gtk_box_pack_end(vbox, viewport, FALSE, FALSE, 0);
-	gtk_widget_show(fe->statusbar);
-	fe->statusctx = gtk_statusbar_get_context_id
-	    (GTK_STATUSBAR(fe->statusbar), "game");
-	gtk_statusbar_push(GTK_STATUSBAR(fe->statusbar), fe->statusctx,
-			   "test");
-	gtk_widget_size_request(fe->statusbar, &req);
-#if 0
-	/* For GTK 2.0, should we be using gtk_widget_set_size_request? */
-#endif
-	gtk_widget_set_usize(viewport, -1, req.height);
-    } else
-	fe->statusbar = NULL;
-
-    fe->area = gtk_drawing_area_new();
-#if GTK_CHECK_VERSION(2,0,0)
-    GTK_WIDGET_UNSET_FLAGS(fe->area, GTK_DOUBLE_BUFFERED);
-#endif
-    get_size(fe, &x, &y);
-    gtk_drawing_area_size(GTK_DRAWING_AREA(fe->area), x, y);
-    fe->w = x;
-    fe->h = y;
-
-    gtk_box_pack_end(vbox, fe->area, TRUE, TRUE, 0);
-
-    clear_backing_store(fe);
-    fe->fonts = NULL;
-    fe->nfonts = fe->fontsize = 0;
-
-    fe->paste_data = NULL;
-    fe->paste_data_len = 0;
-
-    gtk_signal_connect(GTK_OBJECT(fe->window), "destroy",
-		       GTK_SIGNAL_FUNC(destroy), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->window), "key_press_event",
-		       GTK_SIGNAL_FUNC(key_event), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->area), "button_press_event",
-		       GTK_SIGNAL_FUNC(button_event), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->area), "button_release_event",
-		       GTK_SIGNAL_FUNC(button_event), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->area), "motion_notify_event",
-		       GTK_SIGNAL_FUNC(motion_event), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->area), "selection_get",
-		       GTK_SIGNAL_FUNC(selection_get), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->area), "selection_clear_event",
-		       GTK_SIGNAL_FUNC(selection_clear), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->area), "expose_event",
-		       GTK_SIGNAL_FUNC(expose_area), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->window), "map_event",
-		       GTK_SIGNAL_FUNC(map_window), fe);
-    gtk_signal_connect(GTK_OBJECT(fe->area), "configure_event",
-		       GTK_SIGNAL_FUNC(configure_area), fe);
-
-    gtk_widget_add_events(GTK_WIDGET(fe->area),
-                          GDK_BUTTON_PRESS_MASK |
-                          GDK_BUTTON_RELEASE_MASK |
-			  GDK_BUTTON_MOTION_MASK |
-			  GDK_POINTER_MOTION_HINT_MASK);
-
-    if (n_xpm_icons) {
-	gtk_widget_realize(fe->window);
-	iconpm = gdk_pixmap_create_from_xpm_d(fe->window->window, NULL,
-					      NULL, (gchar **)xpm_icons[0]);
-	gdk_window_set_icon(fe->window->window, NULL, iconpm, NULL);
-	iconlist = NULL;
-	for (n = 0; n < n_xpm_icons; n++) {
-	    iconlist =
-		g_list_append(iconlist,
-			      gdk_pixbuf_new_from_xpm_data((const gchar **)
-							   xpm_icons[n]));
-	}
-	gdk_window_set_icon_list(fe->window->window, iconlist);
-    }
-
-    gtk_widget_show(fe->area);
-    gtk_widget_show(fe->window);
-
-    /*
-     * Now that we've established the preferred size of the window,
-     * reduce the drawing area's size request so the user can shrink
-     * the window.
-     */
-    gtk_drawing_area_size(GTK_DRAWING_AREA(fe->area), 1, 1);
-    set_window_background(fe, 0);
 
     return fe;
 }
@@ -2537,369 +2257,18 @@ int main(int argc, char **argv)
 {
     char *pname = argv[0];
     char *error;
-    int ngenerate = 0, print = FALSE, px = 1, py = 1;
-    int soln = FALSE, colour = FALSE;
-    float scale = 1.0F;
-    float redo_proportion = 0.0F;
-    char *savefile = NULL, *savesuffix = NULL;
-    char *arg = NULL;
-    int argtype = ARG_EITHER;
-    char *screenshot_file = NULL;
-    int doing_opts = TRUE;
-    int ac = argc;
-    char **av = argv;
-    char errbuf[500];
+    frontend *fe;
 
-    /*
-     * Command line parsing in this function is rather fiddly,
-     * because GTK wants to have a go at argc/argv _first_ - and
-     * yet we can't let it, because gtk_init() will bomb out if it
-     * can't open an X display, whereas in fact we want to permit
-     * our --generate and --print modes to run without an X
-     * display.
-     * 
-     * So what we do is:
-     * 	- we parse the command line ourselves, without modifying
-     * 	  argc/argv
-     * 	- if we encounter an error which might plausibly be the
-     * 	  result of a GTK command line (i.e. not detailed errors in
-     * 	  particular options of ours) we store the error message
-     * 	  and terminate parsing.
-     * 	- if we got enough out of the command line to know it
-     * 	  specifies a non-X mode of operation, we either display
-     * 	  the stored error and return failure, or if there is no
-     * 	  stored error we do the non-X operation and return
-     * 	  success.
-     *  - otherwise, we go straight to gtk_init().
-     */
+    gtk_init(&argc, &argv);
 
-    errbuf[0] = '\0';
-    while (--ac > 0) {
-	char *p = *++av;
-	if (doing_opts && !strcmp(p, "--version")) {
-	    printf("%s, from Simon Tatham's Portable Puzzle Collection\n%s\n",
-		   thegame.name, ver);
-	    return 0;
-	} else if (doing_opts && !strcmp(p, "--generate")) {
-	    if (--ac > 0) {
-		ngenerate = atoi(*++av);
-		if (!ngenerate) {
-		    fprintf(stderr, "%s: '--generate' expected a number\n",
-			    pname);
-		    return 1;
-		}
-	    } else
-		ngenerate = 1;
-	} else if (doing_opts && !strcmp(p, "--save")) {
-	    if (--ac > 0) {
-		savefile = *++av;
-	    } else {
-		fprintf(stderr, "%s: '--save' expected a filename\n",
-			pname);
-		return 1;
-	    }
-	} else if (doing_opts && (!strcmp(p, "--save-suffix") ||
-				  !strcmp(p, "--savesuffix"))) {
-	    if (--ac > 0) {
-		savesuffix = *++av;
-	    } else {
-		fprintf(stderr, "%s: '--save-suffix' expected a filename\n",
-			pname);
-		return 1;
-	    }
-	} else if (doing_opts && !strcmp(p, "--print")) {
-	    if (!thegame.can_print) {
-		fprintf(stderr, "%s: this game does not support printing\n",
-			pname);
-		return 1;
-	    }
-	    print = TRUE;
-	    if (--ac > 0) {
-		char *dim = *++av;
-		if (sscanf(dim, "%dx%d", &px, &py) != 2) {
-		    fprintf(stderr, "%s: unable to parse argument '%s' to "
-			    "'--print'\n", pname, dim);
-		    return 1;
-		}
-	    } else {
-		px = py = 1;
-	    }
-	} else if (doing_opts && !strcmp(p, "--scale")) {
-	    if (--ac > 0) {
-		scale = atof(*++av);
-	    } else {
-		fprintf(stderr, "%s: no argument supplied to '--scale'\n",
-			pname);
-		return 1;
-	    }
-	} else if (doing_opts && !strcmp(p, "--redo")) {
-	    /*
-	     * This is an internal option which I don't expect
-	     * users to have any particular use for. The effect of
-	     * --redo is that once the game has been loaded and
-	     * initialised, the next move in the redo chain is
-	     * replayed, and the game screen is redrawn part way
-	     * through the making of the move. This is only
-	     * meaningful if there _is_ a next move in the redo
-	     * chain, which means in turn that this option is only
-	     * useful if you're also passing a save file on the
-	     * command line.
-	     *
-	     * This option is used by the script which generates
-	     * the puzzle icons and website screenshots, and I
-	     * don't imagine it's useful for anything else.
-	     * (Unless, I suppose, users don't like my screenshots
-	     * and want to generate their own in the same way for
-	     * some repackaged version of the puzzles.)
-	     */
-	    if (--ac > 0) {
-		redo_proportion = atof(*++av);
-	    } else {
-		fprintf(stderr, "%s: no argument supplied to '--redo'\n",
-			pname);
-		return 1;
-	    }
-	} else if (doing_opts && !strcmp(p, "--screenshot")) {
-	    /*
-	     * Another internal option for the icon building
-	     * script. This causes a screenshot of the central
-	     * drawing area (i.e. not including the menu bar or
-	     * status bar) to be saved to a PNG file once the
-	     * window has been drawn, and then the application
-	     * quits immediately.
-	     */
-	    if (--ac > 0) {
-		screenshot_file = *++av;
-	    } else {
-		fprintf(stderr, "%s: no argument supplied to '--screenshot'\n",
-			pname);
-		return 1;
-	    }
-	} else if (doing_opts && (!strcmp(p, "--with-solutions") ||
-				  !strcmp(p, "--with-solution") ||
-				  !strcmp(p, "--with-solns") ||
-				  !strcmp(p, "--with-soln") ||
-				  !strcmp(p, "--solutions") ||
-				  !strcmp(p, "--solution") ||
-				  !strcmp(p, "--solns") ||
-				  !strcmp(p, "--soln"))) {
-	    soln = TRUE;
-	} else if (doing_opts && !strcmp(p, "--colour")) {
-	    if (!thegame.can_print_in_colour) {
-		fprintf(stderr, "%s: this game does not support colour"
-			" printing\n", pname);
-		return 1;
-	    }
-	    colour = TRUE;
-	} else if (doing_opts && !strcmp(p, "--load")) {
-	    argtype = ARG_SAVE;
-	} else if (doing_opts && !strcmp(p, "--game")) {
-	    argtype = ARG_ID;
-	} else if (doing_opts && !strcmp(p, "--")) {
-	    doing_opts = FALSE;
-	} else if (!doing_opts || p[0] != '-') {
-	    if (arg) {
-		fprintf(stderr, "%s: more than one argument supplied\n",
-			pname);
-		return 1;
-	    }
-	    arg = p;
-	} else {
-	    sprintf(errbuf, "%.100s: unrecognised option '%.100s'\n",
-		    pname, p);
-	    break;
-	}
+    fe = new_window();
+
+    if (!fe) {
+      fprintf(stderr, "%s: %s\n", pname, error);
+      return 1;
     }
 
-    if (*errbuf) {
-	fputs(errbuf, stderr);
-	return 1;
-    }
-
-    /*
-     * Special standalone mode for generating puzzle IDs on the
-     * command line. Useful for generating puzzles to be printed
-     * out and solved offline (for puzzles where that even makes
-     * sense - Solo, for example, is a lot more pencil-and-paper
-     * friendly than Twiddle!)
-     * 
-     * Usage:
-     * 
-     *   <puzzle-name> --generate [<n> [<params>]]
-     * 
-     * <n>, if present, is the number of puzzle IDs to generate.
-     * <params>, if present, is the same type of parameter string
-     * you would pass to the puzzle when running it in GUI mode,
-     * including optional extras such as the expansion factor in
-     * Rectangles and the difficulty level in Solo.
-     * 
-     * If you specify <params>, you must also specify <n> (although
-     * you may specify it to be 1). Sorry; that was the
-     * simplest-to-parse command-line syntax I came up with.
-     */
-    if (ngenerate > 0 || print || savefile || savesuffix) {
-	int i, n = 1;
-	midend *me;
-	char *id;
-	document *doc = NULL;
-
-	n = ngenerate;
-
-	me = midend_new(NULL, &thegame, NULL, NULL, 0);
-	i = 0;
-
-	if (savefile && !savesuffix)
-	    savesuffix = "";
-	if (!savefile && savesuffix)
-	    savefile = "";
-
-	if (print)
-	    doc = document_new(px, py, scale);
-
-	/*
-	 * In this loop, we either generate a game ID or read one
-	 * from stdin depending on whether we're in generate mode;
-	 * then we either write it to stdout or print it, depending
-	 * on whether we're in print mode. Thus, this loop handles
-	 * generate-to-stdout, print-from-stdin and generate-and-
-	 * immediately-print modes.
-	 * 
-	 * (It could also handle a copy-stdin-to-stdout mode,
-	 * although there's currently no combination of options
-	 * which will cause this loop to be activated in that mode.
-	 * It wouldn't be _entirely_ pointless, though, because
-	 * stdin could contain bare params strings or random-seed
-	 * IDs, and stdout would contain nothing but fully
-	 * generated descriptive game IDs.)
-	 */
-	while (ngenerate == 0 || i < n) {
-	    char *pstr, *err;
-
-	    if (ngenerate == 0) {
-		pstr = fgetline(stdin);
-		if (!pstr)
-		    break;
-		pstr[strcspn(pstr, "\r\n")] = '\0';
-	    } else {
-		if (arg) {
-		    pstr = snewn(strlen(arg) + 40, char);
-
-		    strcpy(pstr, arg);
-		    if (i > 0 && strchr(arg, '#'))
-			sprintf(pstr + strlen(pstr), "-%d", i);
-		} else
-		    pstr = NULL;
-	    }
-
-	    if (pstr) {
-		err = midend_game_id(me, pstr);
-		if (err) {
-		    fprintf(stderr, "%s: error parsing '%s': %s\n",
-			    pname, pstr, err);
-		    return 1;
-		}
-	    }
-	    sfree(pstr);
-
-	    midend_new_game(me);
-
-	    if (doc) {
-		err = midend_print_puzzle(me, doc, soln);
-		if (err) {
-		    fprintf(stderr, "%s: error in printing: %s\n", pname, err);
-		    return 1;
-		}
-	    }
-	    if (savefile) {
-		struct savefile_write_ctx ctx;
-		char *realname = snewn(40 + strlen(savefile) +
-				       strlen(savesuffix), char);
-		sprintf(realname, "%s%d%s", savefile, i, savesuffix);
-
-                if (soln) {
-                    char *err = midend_solve(me);
-                    if (err) {
-                        fprintf(stderr, "%s: unable to show solution: %s\n",
-                                realname, err);
-                        return 1;
-                    }
-                }
-
-		ctx.fp = fopen(realname, "w");
-		if (!ctx.fp) {
-		    fprintf(stderr, "%s: open: %s\n", realname,
-			    strerror(errno));
-		    return 1;
-		}
-                ctx.error = 0;
-		midend_serialise(me, savefile_write, &ctx);
-		if (ctx.error) {
-		    fprintf(stderr, "%s: write: %s\n", realname,
-			    strerror(ctx.error));
-		    return 1;
-		}
-		if (fclose(ctx.fp)) {
-		    fprintf(stderr, "%s: close: %s\n", realname,
-			    strerror(errno));
-		    return 1;
-		}
-		sfree(realname);
-	    }
-	    if (!doc && !savefile) {
-		id = midend_get_game_id(me);
-		puts(id);
-		sfree(id);
-	    }
-
-	    i++;
-	}
-
-	if (doc) {
-	    psdata *ps = ps_init(stdout, colour);
-	    document_print(doc, ps_drawing_api(ps));
-	    document_free(doc);
-	    ps_free(ps);
-	}
-
-	midend_free(me);
-
-	return 0;
-    } else {
-	frontend *fe;
-
-	gtk_init(&argc, &argv);
-
-	fe = new_window(arg, argtype, &error);
-
-	if (!fe) {
-	    fprintf(stderr, "%s: %s\n", pname, error);
-	    return 1;
-	}
-
-	if (screenshot_file) {
-	    /*
-	     * Some puzzles will not redraw their entire area if
-	     * given a partially completed animation, which means
-	     * we must redraw now and _then_ redraw again after
-	     * freezing the move timer.
-	     */
-	    midend_force_redraw(fe->me);
-	}
-
-	if (redo_proportion) {
-	    /* Start a redo. */
-	    midend_process_key(fe->me, 0, 0, 'r');
-	    /* And freeze the timer at the specified position. */
-	    midend_freeze_timer(fe->me, redo_proportion);
-	}
-
-	if (screenshot_file) {
-	    save_screenshot_png(fe, screenshot_file);
-	    exit(0);
-	}
-
-	gtk_main();
-    }
+    gtk_main();
 
     return 0;
 }
