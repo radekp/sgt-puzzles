@@ -99,3 +99,6 @@ SOURCES=\
     version.c\
     qt.cpp
 
+HEADERS=\
+    qt.h\
+    qtcanvas.h
