@@ -11,7 +11,8 @@ TARGET=sgt-puzzles
 
 # This app uses Qtopia
 CONFIG+=qtopia
-DEFINES+=QTOPIA COMBINED
+#DEFINES+=QTOPIA COMBINED
+DEFINES+=COMBINED
 
 # Specify the languages that make lupdate should produce .ts files for
 STRING_LANGUAGE=en_US
@@ -19,27 +20,27 @@ AVAILABLE_LANGUAGES=$$QTOPIA_AVAILABLE_LANGUAGES
 LANGUAGES=$$QTOPIA_LANGUAGES
 
 # Package information (used for qbuild packages)
-pkg [
-    name=sgt-puzzles
-    desc="Simon Tatham's Portable Puzzle Collection"
-    license=GPLv3
-    version=0.svn.9404.nj.1
-    maintainer="Neil Jerram <neil@ossau.homelinux.net>"
-]
+#pkg [
+#    name=sgt-puzzles
+#    desc="Simon Tatham's Portable Puzzle Collection"
+#    license=GPLv3
+#    version=0.svn.9404.nj.1
+#    maintainer="Neil Jerram <neil@ossau.homelinux.net>"
+#]
 
 # SXE information
-target [
-    hint=sxe
-    domain=untrusted
-]
+#target [
+#    hint=sxe
+#    domain=untrusted
+#]
 
 # Install the launcher item. The metadata comes from the .desktop file
 # and the path here.
-desktop [
-    hint=desktop
-    files=sgt-puzzles.desktop
-    path=/apps/Games
-]
+#desktop [
+#    hint=desktop
+#    files=sgt-puzzles.desktop
+#    path=/apps/Games
+#]
 
 FORMS=\
     qt.ui

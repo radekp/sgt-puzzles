@@ -21,7 +21,12 @@ extern "C" {
 
 #include "qtcanvas.h"
 #include "qt.h"
+
+#ifdef QTOPIA
 #include <qtopiaapplication.h>
+#else
+#include <QtGui/QApplication>
+#endif
 
 extern "C" {
 
@@ -532,7 +537,7 @@ void PuzzleWindow::end_draw()
 
 void PuzzleWindow::status_bar(char *text)
 {
-  statusBar->setText(text);
+  status_Bar->setText(text);
 }
 
 void PuzzleWindow::blitter_save(struct blitter *bl, int x, int y)
@@ -574,5 +579,19 @@ void PuzzleWindow::default_colour(float *output)
   output[2] = base_colour.blueF();
 }
 
+#ifdef QTOPIA
+
 QTOPIA_ADD_APPLICATION(QTOPIA_TARGET, PuzzleWindow)
 QTOPIA_MAIN
+
+#else
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    PuzzleWindow w;
+    w.show();
+    return a.exec();
+}
+
+#endif

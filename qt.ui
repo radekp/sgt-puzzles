@@ -38,7 +38,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="statusBar"/>
+      <widget class="QLabel" name="status_Bar"/>
      </item>
     </layout>
    </widget>
