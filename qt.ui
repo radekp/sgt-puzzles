@@ -10,6 +10,12 @@
     <height>640</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Simon Tatham's Puzzles</string>
   </property>
@@ -28,7 +34,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QtCanvas" name="canvas">
+      <widget class="QtCanvas" name="canvas" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -49,7 +55,7 @@
      <x>0</x>
      <y>0</y>
      <width>480</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuGame">
@@ -218,6 +224,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QtCanvas</class>
+   <extends>QWidget</extends>
+   <header>qtcanvas.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

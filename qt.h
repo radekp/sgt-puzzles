@@ -18,7 +18,7 @@ public:
   void mouse_event(QMouseEvent *ev, int midend_type);
 
   QColor get_colour(int colour);
-  void draw_text(int x, int y, QFont& font, int flags, int colour, char *text);
+  void draw_text(int x, int y, QFont& font, int align, int colour, char *text);
   void draw_rect(int x, int y, int w, int h, int colour);
   void draw_line(int x1, int y1, int x2, int y2, int colour);
   void draw_poly(int npoints, QPoint *points, int fill, int outline);
@@ -50,12 +50,14 @@ private:
   QTimer *timer;
   struct timeval last_time;
 
+  void new_game();
+
 protected:
 
   private slots:
   void timerSlot();
   void game_restart();
-  void game_type_preset();
+  void game_type_preset(QAction *action);
   void game_solve();
   void game_key();
 
