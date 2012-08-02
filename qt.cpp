@@ -250,6 +250,12 @@ void QtCanvas::mouseMoveEvent(QMouseEvent *ev)
   puzz_win->mouse_event(ev, LEFT_DRAG);
 }
 
+//QSize QtCanvas::sizeHint () const
+//{
+//  QSize size(puzz_win->w, puzz_win->h);
+//  return size;
+//}
+
 PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
 {
   setupUi(this);
@@ -351,10 +357,24 @@ void PuzzleWindow::new_game()
   w = INT_MAX;
   h = INT_MAX;
   midend_size(me, &w, &h, FALSE);
-  canvas->setFixedSize(w, h);
+  canvas->setMinimumSize(w, h);
+  //canvas->updateGeometry();
+  //canvas->update();
+  //this->updateGeometry();
+  w = canvas->width();
+  h = canvas->height();
+  midend_size(me, &w, &h, FALSE);
+  canvas->setMinimumSize(w, h);
+  //canvas->updateGeometry();
+  //canvas->update();
+  //this->updateGeometry();
 
   // Create the pixmap that all the drawing functions will paint on.
   pixmap = new QPixmap(w, h);
+  //canvas->setPixmap(*pixmap);
+  //canvas->update();
+  //canvas->adjustSize();
+  //this->adjustSize();
 
   // Do the initial drawing.
   midend_redraw(me);
