@@ -452,6 +452,8 @@ void PuzzleWindow::draw_text(int x, int y,
 
   if (align & ALIGN_VCENTRE)
     y -= textRect.height() / 2;
+  else // ALIGN_VNORMAL
+    y -= textRect.height();
 
   if (align & ALIGN_HCENTRE)
     x -= textRect.width() / 2;
