@@ -13,7 +13,6 @@ public:
   QtCanvas(QWidget * parent = 0, Qt::WFlags f = 0);
   virtual ~QtCanvas();
   PuzzleWindow *puzz_win;
-  //  virtual QSize	sizeHint () const;
 
 private:
 
