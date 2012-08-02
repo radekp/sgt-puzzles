@@ -490,8 +490,10 @@ void PuzzleWindow::draw_poly(int npoints, QPoint *points, int fill, int outline)
     p.setClipping(TRUE);
   }
   p.setPen(get_colour(outline));
-  QBrush brush(get_colour(fill));
-  p.setBrush(brush);
+  if (fill != -1) {
+    QBrush brush(get_colour(fill));
+    p.setBrush(brush);
+  }
   p.drawPolygon(points, npoints);
 }
 
@@ -504,8 +506,10 @@ void PuzzleWindow::draw_circle(int cx, int cy, int radius,
     p.setClipping(TRUE);
   }
   p.setPen(get_colour(outline));
-  QBrush brush(get_colour(fill));
-  p.setBrush(brush);
+  if (fill != -1) {
+    QBrush brush(get_colour(fill));
+    p.setBrush(brush);
+  }
   p.drawEllipse(cx - radius, cy - radius, 2 * radius, 2 * radius);
 }
 
