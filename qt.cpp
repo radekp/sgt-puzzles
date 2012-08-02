@@ -24,6 +24,7 @@ extern "C" {
 
 #ifdef QTOPIA
 #include <qtopiaapplication.h>
+#include <QSoftMenuBar>
 #else
 #include <QtGui/QApplication>
 #endif
@@ -53,7 +54,11 @@ extern "C" {
 		    int align, int colour, char *text)
   {
     const char *font_family = (fonttype == FONT_FIXED) ? "Courier" : "Arial";
+#ifdef QTOPIA
+    QFont font(font_family, fontsize / 2);
+#else
     QFont font(font_family, fontsize);
+#endif
 
     ((frontend *)handle)->window->draw_text(x,
 					    y,
@@ -571,10 +576,14 @@ void PuzzleWindow::draw_thick_line(float thickness,
 
 void PuzzleWindow::default_colour(float *output)
 {
+#ifdef QTOPIA
+  output[0] = output[1] = output[2] = 0.8F;
+#else
   QColor base_colour = palette().color(QPalette::Base);
   output[0] = base_colour.redF();
   output[1] = base_colour.greenF();
   output[2] = base_colour.blueF();
+#endif
 }
 
 void PuzzleWindow::choose_game_type(QAction *action)
@@ -586,6 +595,9 @@ void PuzzleWindow::choose_game_type(QAction *action)
 
 void PuzzleWindow::switch_game()
 {
+  // Set the window title.
+  setWindowTitle(thegame->name);
+
   // Set up stuff that depends on the chosen game.
   actionSolve->setEnabled(thegame->can_solve);
   actiontb0->setEnabled(thegame->flags & REQUIRE_NUMPAD);
@@ -630,6 +642,16 @@ void PuzzleWindow::switch_game()
   }
   menuType->addActions(game_presets->actions());
   connect(game_presets, SIGNAL(triggered(QAction *)), this, SLOT(game_type_preset(QAction *)));
+
+#ifdef QTOPIA
+  QMenu *softMenu = QSoftMenuBar::menuFor(this);
+  softMenu->addAction(actionNew);
+  softMenu->addAction(actionSolve);
+  softMenu->addAction(actionRestart);
+  softMenu->addMenu(menuType);
+  softMenu->addMenu(menuChoose_Game);
+  menuBar()->hide();
+#endif
 
   // Get the colours that the midend will need.
   colours = midend_colours(me, &ncolours);
