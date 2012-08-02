@@ -309,6 +309,7 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   // Connect the canvas widget, which is what directly processes mouse
   // events, back to this main window.
   canvas->puzz_win = this;
+  canvas->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
   // Choose the default game.  For now that'll be the first in the
   // list; in future we should save and restore the last game that the
