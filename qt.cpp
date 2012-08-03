@@ -316,6 +316,11 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   canvas->puzz_win = this;
   canvas->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
+  // Temporary stuff to help show the size of the canvas.
+  canvas->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+  canvas->setLineWidth(5);
+  canvas->update();
+
   // Choose the default game.  For now that'll be the first in the
   // list; in future we should save and restore the last game that the
   // user switched to.
@@ -354,14 +359,18 @@ void PuzzleWindow::new_game()
   // Tell the midend to figure out the size it needs for the current
   // game, limited to the size of the canvas QLabel, and store the
   // results in w and h.
+#ifndef QTOPIA
   w = INT_MAX;
   h = INT_MAX;
   midend_size(me, &w, &h, FALSE);
   canvas->setMinimumSize(w, h);
+#endif
   w = canvas->width();
   h = canvas->height();
   midend_size(me, &w, &h, FALSE);
+#ifndef QTOPIA
   canvas->setMinimumSize(w, h);
+#endif
 
   // Create the pixmap that all the drawing functions will paint on.
   pixmap = new QPixmap(w, h);
