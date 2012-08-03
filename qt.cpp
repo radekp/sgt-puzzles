@@ -242,17 +242,17 @@ QtCanvas::~QtCanvas() {
 
 void QtCanvas::mousePressEvent(QMouseEvent *ev)
 {
-  puzz_win->mouse_event(ev, LEFT_BUTTON);
+  puzz_win->mouse_event(this, ev, LEFT_BUTTON);
 }
 
 void QtCanvas::mouseReleaseEvent(QMouseEvent *ev)
 {
-  puzz_win->mouse_event(ev, LEFT_RELEASE);
+  puzz_win->mouse_event(this, ev, LEFT_RELEASE);
 }
 
 void QtCanvas::mouseMoveEvent(QMouseEvent *ev)
 {
-  puzz_win->mouse_event(ev, LEFT_DRAG);
+  puzz_win->mouse_event(this, ev, LEFT_DRAG);
 }
 
 PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent, f)
@@ -283,36 +283,13 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   connect(actionSolve, SIGNAL(triggered()), this, SLOT(game_solve()));
   connect(actionNew, SIGNAL(triggered()), this, SLOT(game_key()));
   connect(actionExit, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontbUndo, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontbRedo, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb0, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb1, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb2, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb3, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb4, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb5, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb6, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb7, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb8, SIGNAL(triggered()), this, SLOT(game_key()));
-  connect(actiontb9, SIGNAL(triggered()), this, SLOT(game_key()));
 
   actionNew->setData('n');
   actionExit->setData('q');
-  actiontbUndo->setData('u');
-  actiontbRedo->setData('r');
-  actiontb0->setData('0');
-  actiontb1->setData('1');
-  actiontb2->setData('2');
-  actiontb3->setData('3');
-  actiontb4->setData('4');
-  actiontb5->setData('5');
-  actiontb6->setData('6');
-  actiontb7->setData('7');
-  actiontb8->setData('8');
-  actiontb9->setData('9');
 
   // Connect the canvas widget, which is what directly processes mouse
   // events, back to this main window.
+  toolBar->puzz_win = this;
   canvas->puzz_win = this;
   canvas->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
@@ -436,9 +413,46 @@ void PuzzleWindow::game_key() {
     close();
 }
 
-void PuzzleWindow::mouse_event(QMouseEvent *ev, int midend_type) {
-  if (!midend_process_key(me, ev->x(), ev->y(), midend_type))
-    close();
+void PuzzleWindow::mouse_event(QWidget *src, QMouseEvent *ev, int midend_type) {
+  if (src == toolBar) {
+    // Only process release events.
+    if (midend_type != LEFT_RELEASE) return;
+
+    // Map of X coordinate types to midend event letters.
+    struct {
+      int min;
+      int max;
+      char event_letter;
+    } map[12] = {
+      { 12, 66, 'u' },
+      { 82, 134, 'r' },
+      { 151, 167, '0' },
+      { 183, 199, '1' },
+      { 214, 230, '2' },
+      { 247, 263, '3' },
+      { 278, 294, '4' },
+      { 310, 326, '5' },
+      { 341, 357, '6' },
+      { 374, 390, '7' },
+      { 406, 422, '8' },
+      { 437, 453, '9' }
+    };
+    int x = ev->x();
+    int i;
+
+    for (i = 0; i < 12; i++) {
+      if (x <= map[i].max) {
+	if (x >= map[i].min) {
+	  if (!midend_process_key(me, 0, 0, map[i].event_letter))
+	    close();
+	}
+	return;
+      }
+    }
+  } else { // src is not the toolbar
+    if (!midend_process_key(me, ev->x(), ev->y(), midend_type))
+      close();
+  }
 }
 
 QColor PuzzleWindow::get_colour(int colour)
@@ -609,16 +623,11 @@ void PuzzleWindow::switch_game()
 
   // Set up stuff that depends on the chosen game.
   actionSolve->setEnabled(thegame->can_solve);
-  actiontb0->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb1->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb2->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb3->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb4->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb5->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb6->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb7->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb8->setEnabled(thegame->flags & REQUIRE_NUMPAD);
-  actiontb9->setEnabled(thegame->flags & REQUIRE_NUMPAD);
+  if (thegame->flags & REQUIRE_NUMPAD) {
+    toolBar->setPixmap(QPixmap(":qt-numpad.png"));
+  } else {
+    toolBar->setPixmap(QPixmap(":qt-numpad-dis.png"));
+  }
 
   // Clean up any old midend.
   if (me)

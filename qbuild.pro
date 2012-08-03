@@ -102,3 +102,6 @@ SOURCES=\
 HEADERS=\
     qt.h\
     qtcanvas.h
+
+RESOURCES+=\
+    qt.qrc

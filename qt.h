@@ -15,7 +15,7 @@ public:
   void deactivate_timer();
   QPixmap *pixmap;
 
-  void mouse_event(QMouseEvent *ev, int midend_type);
+  void mouse_event(QWidget *src, QMouseEvent *ev, int midend_type);
 
   QColor get_colour(int colour);
   void draw_text(int x, int y, QFont& font, int align, int colour, char *text);

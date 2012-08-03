@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/" >
+        <file>qt-numpad.png</file>
+        <file>qt-numpad-dis.png</file>
+    </qresource>
+</RCC>
