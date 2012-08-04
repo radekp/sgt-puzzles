@@ -291,7 +291,7 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   // events, back to this main window.
   toolBar->puzz_win = this;
   canvas->puzz_win = this;
-  canvas->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+  canvas->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
   // Temporary stuff to help show the size of the canvas.
   canvas->setFrameStyle(QFrame::Panel | QFrame::Sunken);
@@ -450,7 +450,9 @@ void PuzzleWindow::mouse_event(QWidget *src, QMouseEvent *ev, int midend_type) {
       }
     }
   } else { // src is not the toolbar
-    if (!midend_process_key(me, ev->x(), ev->y(), midend_type))
+    int x = ev->x() - ((canvas->width() - w) / 2);
+    int y = ev->y() - ((canvas->height() - h) / 2);
+    if (!midend_process_key(me, x, y, midend_type))
       close();
   }
 }
