@@ -52,17 +52,17 @@ private:
   struct timeval last_time;
 
   void switch_game();
-  void new_game();
 
 protected:
 
-  private slots:
+private slots:
   void timerSlot();
   void game_restart();
   void game_type_preset(QAction *action);
   void game_solve();
   void game_key();
   void choose_game_type(QAction *action);
+  void new_game();
 
 };
 

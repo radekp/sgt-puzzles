@@ -293,11 +293,6 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   canvas->puzz_win = this;
   canvas->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-  // Temporary stuff to help show the size of the canvas.
-  canvas->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  canvas->setLineWidth(5);
-  canvas->update();
-
   // Choose the default game.  For now that'll be the first in the
   // list; in future we should save and restore the last game that the
   // user switched to.
@@ -344,7 +339,7 @@ void PuzzleWindow::new_game()
 #endif
   w = canvas->width();
   h = canvas->height();
-  midend_size(me, &w, &h, FALSE);
+  midend_size(me, &w, &h, TRUE);
 #ifndef QTOPIA
   canvas->setMinimumSize(w, h);
 #endif
@@ -676,8 +671,10 @@ void PuzzleWindow::switch_game()
   // Get the colours that the midend will need.
   colours = midend_colours(me, &ncolours);
 
-  // Start a new game.
-  new_game();
+  // Start a new game.  For some reason, if we call new_game()
+  // directly here, the initial puzzle doesn't get shown when the app
+  // first starts up.  Calling it via a timer makes it work.
+  QTimer::singleShot(50, this, SLOT(new_game()));
 }
 
 #ifdef QTOPIA
