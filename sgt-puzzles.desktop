@@ -5,4 +5,4 @@ Exec=sgt-puzzles
 Terminal=false
 Type=Application
 Categories=Game;
-Icon=qtmaze/qtmaze
+Icon=sgt-puzzles/sgt-puzzles

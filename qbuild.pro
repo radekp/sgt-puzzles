@@ -105,3 +105,10 @@ HEADERS=\
 
 RESOURCES+=\
     qt.qrc
+
+# Install a desktop picture.
+pics [
+    hint=pics
+    files=sgt-puzzles.png
+    path=/pics/sgt-puzzles
+]
