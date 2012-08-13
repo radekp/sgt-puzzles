@@ -1,0 +1,14 @@
+Source: qtmoko-sgt-puzzles
+Section: games
+Priority: optional
+Maintainer: Radek Polak <psonek2@seznam.cz>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.8.4
+Homepage: http://www.chiark.greenend.org.uk/~sgtatham/puzzles/
+Vcs-Git: git://github.com/radekp/sgt-puzzles.git
+Vcs-Browser: https://github.com/radekp/sgt-puzzles
+
+Package: qtmoko-sgt-puzzles
+Architecture: any
+Depends:
+Description: Simon Tatham's Portable Puzzle Collection
