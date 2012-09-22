@@ -266,6 +266,8 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   game_presets = NULL;
   clip_x = -1;
 
+  settings = new QSettings("QtMoko", "SGT-Puzzles");
+
   // Allocate the frontend structure that the rest of sgt-puzzles
   // understands, and link it to this main window.
   fe = snew(frontend);
@@ -293,10 +295,9 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   canvas->puzz_win = this;
   canvas->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-  // Choose the default game.  For now that'll be the first in the
-  // list; in future we should save and restore the last game that the
-  // user switched to.
-  thegame = gamelist[12];
+  // Decide the default game.
+  QString last_game_name = settings->value("last_game", "").toString();
+  thegame = NULL;
 
   // Create Choose Game menu.
   menuChoose_Game->clear();
@@ -306,12 +307,29 @@ PuzzleWindow::PuzzleWindow(QWidget * parent, Qt::WFlags f) : QMainWindow(parent,
   }
   choose_game = new QActionGroup(this);
   int i;
+  QAction *loopy_act = NULL;
   for (i = 0; i < gamecount; i++) {
     QAction *act = choose_game->addAction(gamelist[i]->name);
     act->setCheckable(true);
     act->setData(i);
-    act->setChecked(gamelist[i] == thegame);
+    if (QString(gamelist[i]->name) == last_game_name) {
+      act->setChecked(true);
+      thegame = gamelist[i];
+    } else {
+      act->setChecked(false);
+    }
+    if (QString(gamelist[i]->name) == QString("Loopy")) {
+      loopy_act = act;
+    }
   }
+
+  // In case we're running for the first time, or someone hand-edited
+  // their config and so last_game_name was invalid...
+  if (thegame == NULL) {
+    thegame = gamelist[loopy_act->data().toInt()];
+    loopy_act->setChecked(true);
+  }
+
   menuChoose_Game->addActions(choose_game->actions());
   connect(choose_game, SIGNAL(triggered(QAction *)), this, SLOT(choose_game_type(QAction *)));
 
@@ -392,8 +410,12 @@ void PuzzleWindow::game_type_preset(QAction *action) {
   midend_fetch_preset(me, action->data().toInt(), &name, &params);
   midend_set_params(me, params);
 
+  // Remember the last preset for the current game.
+  settings->setValue(thegame->name, name);
+  settings->sync();
+
   // Start a new game.
-  new_game();
+  QTimer::singleShot(50, this, SLOT(new_game()));
 }
 
 void PuzzleWindow::game_solve() {
@@ -610,6 +632,8 @@ void PuzzleWindow::choose_game_type(QAction *action)
 {
   // Switch to new game.
   thegame = gamelist[action->data().toInt()];
+  settings->setValue("last_game", thegame->name);
+  settings->sync();
   switch_game();
 }
 
@@ -633,6 +657,9 @@ void PuzzleWindow::switch_game()
   // Create midend for the default game.
   me = midend_new(fe, thegame, &qt_drawing, fe, 1);
 
+  // Find the last preset that the user played, for this game.
+  QString last_preset_name = settings->value(thegame->name, "").toString();
+
   // Create Type menu items according to the presets of the current
   // game.
   menuType->clear();
@@ -643,6 +670,7 @@ void PuzzleWindow::switch_game()
   game_presets = new QActionGroup(this);
   int n = midend_num_presets(me), i;
   int curr = midend_which_preset(me);
+  QAction *last_preset_act = NULL;
   for (i = 0; i < n; i++) {
     char *name;
     game_params *params;
@@ -652,9 +680,12 @@ void PuzzleWindow::switch_game()
     QAction *act = game_presets->addAction(name);
     act->setCheckable(true);
     act->setData(i);
-
-    act->setChecked(i == curr);
+    act->setChecked(false);
+    if ((i == 0) || (QString(name) == last_preset_name)) {
+      last_preset_act = act;
+    }
   }
+  last_preset_act->setChecked(true);
   menuType->addActions(game_presets->actions());
   connect(game_presets, SIGNAL(triggered(QAction *)), this, SLOT(game_type_preset(QAction *)));
 
@@ -674,7 +705,7 @@ void PuzzleWindow::switch_game()
   // Start a new game.  For some reason, if we call new_game()
   // directly here, the initial puzzle doesn't get shown when the app
   // first starts up.  Calling it via a timer makes it work.
-  QTimer::singleShot(50, this, SLOT(new_game()));
+  game_type_preset(last_preset_act);
 }
 
 #ifdef QTOPIA

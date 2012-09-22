@@ -53,6 +53,9 @@ private:
 
   void switch_game();
 
+  // Persistent settings.
+  QSettings *settings;
+
 protected:
 
 private slots:
